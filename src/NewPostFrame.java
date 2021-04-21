@@ -104,7 +104,8 @@ public class NewPostFrame extends JFrame {
         //JOptionPane.showMessageDialog(this, message, "error", JOptionPane.ERROR_MESSAGE);
     }
 
-    void Post createPost() {
+    Post createPost() {
         // TODO: Create post from text fields
+        return new Post();
     }
 }
