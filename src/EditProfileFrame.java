@@ -14,7 +14,7 @@ public class EditProfileFrame extends JFrame {
     JLabel errorLabel;
 
     public EditProfileFrame() {
-        setSize(300, 240);
+        setSize(300, 260);
         setTitle("edit profile");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

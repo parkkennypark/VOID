@@ -15,7 +15,7 @@ public class NewPostFrame extends JFrame {
     JLabel errorLabel;
 
     public NewPostFrame() {
-        setSize(300, 240);
+        setSize(300, 260);
         setTitle("new post");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -44,14 +44,18 @@ public class NewPostFrame extends JFrame {
         bodyLabel.setFont(Style.FONT_SMALL);
         panel.add(bodyLabel);
 
-        // Body area
-        JTextArea bodyArea = new JTextArea(4, 1);
+        // Body area/scroll pane
+        JTextArea bodyArea = new JTextArea(5, 1);
         bodyArea.setAlignmentX(Component.LEFT_ALIGNMENT);
         bodyArea.setFont(Style.FONT_NORMAL);
-        bodyArea.setBorder(Style.BORDER_OUTLINE);
         bodyArea.setLineWrap(true);
         bodyArea.setWrapStyleWord(true);
-        panel.add(bodyArea);
+
+        JScrollPane scrollPane = new JScrollPane(bodyArea);
+        scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+        scrollPane.setBorder(Style.BORDER_OUTLINE);
+        panel.add(scrollPane);
+
         add(panel, BorderLayout.NORTH);
 
         // Bottom panel
@@ -98,5 +102,9 @@ public class NewPostFrame extends JFrame {
         errorLabel.setText(message);
         errorLabel.setVisible(true);
         //JOptionPane.showMessageDialog(this, message, "error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    void Post createPost() {
+        // TODO: Create post from text fields
     }
 }

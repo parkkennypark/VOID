@@ -6,8 +6,6 @@ import java.awt.event.ActionListener;
 import java.security.DigestException;
 
 /**
- *
- *
  * @author Kenny Park
  * @version April 20, 2021
  */
@@ -27,6 +25,7 @@ public class GUI extends JComponent implements Runnable {
         /* set up JFrame */
         JFrame frame = new JFrame("void chat");
         frame.setSize(600, 800);
+        frame.setMinimumSize(new Dimension(500, 300));
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -36,14 +35,14 @@ public class GUI extends JComponent implements Runnable {
 
         content.add(gui, BorderLayout.CENTER);
 
-        /** Top panel **/
+        /** Top panel (title) **/
         JPanel topPanel = new JPanel();
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         topPanel.setBorder(BorderFactory.createCompoundBorder(Style.BORDER_OUTLINE, padding));
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
 
         // Empty space
-        topPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        topPanel.add(Box.createRigidArea(new Dimension(0, 40)));
 
         // Title
         JLabel title = new JLabel("V O I D");
@@ -56,6 +55,9 @@ public class GUI extends JComponent implements Runnable {
         subtitle.setFont(Style.FONT_SMALL);
 //        topPanel.add(subtitle);
 
+        // Empty space
+        topPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+
         // Post button
         JButton postButton = new JButton("c o n t r i b u t e   a   t h o u g h t   t o   t h e   v a c u u m");
         postButton.setFont(Style.FONT_SMALL);
@@ -65,7 +67,7 @@ public class GUI extends JComponent implements Runnable {
         postButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(newPostFrame == null || !newPostFrame.isShowing()) {
+                if (newPostFrame == null || !newPostFrame.isShowing()) {
                     newPostFrame = new NewPostFrame();
                     newPostFrame.setAlwaysOnTop(true);
                 }
@@ -74,9 +76,44 @@ public class GUI extends JComponent implements Runnable {
 
         content.add(topPanel, BorderLayout.NORTH);
 
-        /** Bottom panel **/
+        /** Center panel (post feed) **/
+        JPanel centerPanel = new JPanel();
+        centerPanel.setBorder(padding);
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+
+        /** Feed title **/
+        JPanel feedTitlePanel = new JPanel();
+        feedTitlePanel.setLayout(new BorderLayout());
+        feedTitlePanel.setAlignmentY(Component.TOP_ALIGNMENT);
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        // Vacuum label
+        JLabel vacuumLabel = new JLabel("the vacuum");
+        vacuumLabel.setFont(Style.FONT_SMALL);
+        feedTitlePanel.add(vacuumLabel, BorderLayout.WEST);
+
+        // Muffin label
+        JLabel muffinLabel = new JLabel("most popular muffin: bran");
+        muffinLabel.setFont(Style.FONT_SMALL);
+        feedTitlePanel.add(muffinLabel, BorderLayout.EAST);
+
+        centerPanel.add(feedTitlePanel);
+
+        // Feed scroll view
+        JPanel feedPanel = new JPanel();
+        feedPanel.setLayout(new BoxLayout(feedPanel, BoxLayout.Y_AXIS));
+        feedPanel.setBackground(Color.WHITE);
+        feedPanel.setPreferredSize(new Dimension(500, 500));
+
+        JScrollPane scrollPane = new JScrollPane(feedPanel);
+        scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
+        centerPanel.add(scrollPane);
+
+        content.add(centerPanel, BorderLayout.CENTER);
+
+        /** Bottom panel (profile info) **/
         JPanel bottomPanel = new JPanel();
-        bottomPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        bottomPanel.setBorder(Style.BORDER_OUTLINE);
 
         JLabel accountLabel = new JLabel("signed in as:");
         accountLabel.setFont(Style.FONT_SMALL);
@@ -96,7 +133,7 @@ public class GUI extends JComponent implements Runnable {
         editProfileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(editProfileFrame == null || !editProfileFrame.isShowing()) {
+                if (editProfileFrame == null || !editProfileFrame.isShowing()) {
                     editProfileFrame = new EditProfileFrame();
                     editProfileFrame.setAlwaysOnTop(true);
                 }

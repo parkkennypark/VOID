@@ -1,6 +1,8 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Stores style variables for use across all GUI elements.
@@ -9,8 +11,8 @@ import java.awt.*;
  * @version 
  */
 public class Style {
-    static final String fontName = "Times New Roman";
-    static final Font FONT_TITLE = new Font(fontName, Font.BOLD, 28);
+    static final String fontName = "Serif";
+    static final Font FONT_TITLE = new Font(fontName, Font.PLAIN, 28);
     static final Font FONT_HEADER = new Font(fontName, Font.BOLD, 22);
     static final Font FONT_NORMAL = new Font(fontName, Font.PLAIN, 16);
     static final Font FONT_SMALL = new Font(fontName, Font.PLAIN, 12);
