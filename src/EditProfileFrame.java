@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
  */
 public class EditProfileFrame extends JFrame {
     JLabel errorLabel;
+    String[] muffins = {"bran", "pumpkin-spice", "banana-nut", "chocolate", "blueberry", "oatmeal", "quiche"};
 
     public EditProfileFrame() {
         setSize(300, 260);
@@ -48,9 +49,15 @@ public class EditProfileFrame extends JFrame {
         muffinField.setAlignmentX(Component.LEFT_ALIGNMENT);
         muffinField.setFont(Style.FONT_NORMAL);
         muffinField.setBorder(Style.BORDER_OUTLINE);
-        panel.add(muffinField);
+//        panel.add(muffinField);
 
         add(panel, BorderLayout.NORTH);
+
+        // Muffin dropdown
+        JComboBox muffinBox = new JComboBox(muffins);
+        muffinBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+        muffinBox.setFont(Style.FONT_NORMAL);
+        panel.add(muffinBox);
 
         // Bottom panel
         JPanel bottomPanel = new JPanel();

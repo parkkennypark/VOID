@@ -83,19 +83,21 @@ public class GUI extends JComponent implements Runnable {
 
         /** Feed title **/
         JPanel feedTitlePanel = new JPanel();
-        feedTitlePanel.setLayout(new BorderLayout());
-        feedTitlePanel.setAlignmentY(Component.TOP_ALIGNMENT);
-        GridBagConstraints gbc = new GridBagConstraints();
+        feedTitlePanel.setLayout(new BoxLayout(feedTitlePanel, BoxLayout.LINE_AXIS));
 
         // Vacuum label
         JLabel vacuumLabel = new JLabel("the vacuum");
         vacuumLabel.setFont(Style.FONT_SMALL);
-        feedTitlePanel.add(vacuumLabel, BorderLayout.WEST);
+        vacuumLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        feedTitlePanel.add(vacuumLabel);
+
+        feedTitlePanel.add(Box.createHorizontalGlue());
 
         // Muffin label
         JLabel muffinLabel = new JLabel("most popular muffin: bran");
         muffinLabel.setFont(Style.FONT_SMALL);
-        feedTitlePanel.add(muffinLabel, BorderLayout.EAST);
+        vacuumLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        feedTitlePanel.add(muffinLabel);
 
         centerPanel.add(feedTitlePanel);
 
@@ -103,7 +105,17 @@ public class GUI extends JComponent implements Runnable {
         JPanel feedPanel = new JPanel();
         feedPanel.setLayout(new BoxLayout(feedPanel, BoxLayout.Y_AXIS));
         feedPanel.setBackground(Color.WHITE);
-        feedPanel.setPreferredSize(new Dimension(500, 500));
+//        feedPanel.setPreferredSize(new Dimension(500, 500));
+
+        feedPanel.add(new PostGUI());
+        feedPanel.add(new PostGUI());
+        feedPanel.add(new PostGUI());
+        feedPanel.add(new PostGUI());
+        feedPanel.add(new PostGUI());
+        feedPanel.add(new PostGUI());
+        feedPanel.add(new PostGUI());
+        feedPanel.add(new PostGUI());
+
 
         JScrollPane scrollPane = new JScrollPane(feedPanel);
         scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);

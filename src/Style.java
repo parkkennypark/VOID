@@ -13,7 +13,7 @@ import java.io.IOException;
 public class Style {
     static final String fontName = "Serif";
     static final Font FONT_TITLE = new Font(fontName, Font.PLAIN, 28);
-    static final Font FONT_HEADER = new Font(fontName, Font.BOLD, 22);
+    static final Font FONT_HEADER = new Font(fontName, Font.BOLD, 16);
     static final Font FONT_NORMAL = new Font(fontName, Font.PLAIN, 16);
     static final Font FONT_SMALL = new Font(fontName, Font.PLAIN, 12);
 
