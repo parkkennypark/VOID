@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,35 +9,25 @@ import java.awt.event.ActionListener;
  * The GUI for each individual post in the post feed.
  *
  * @author Kenny Park
- * @version 
+ * @version
  */
-public class PostGUI extends JPanel {
-    String sampleBody = "Have you ever had a dream that you, um, you had, your, you- you could, you’ll do, you- you wants, you, you could do so, you- you’ll do, you could- you, you want, you want them to do you so much you could do anything?";
+public class CommentGUI extends JPanel {
+    String sampleBody = "Neat";
 
-    public PostGUI(Post post) {
+    public CommentGUI(Comment comment) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorder(new EmptyBorder(5, 2, 0, 2));
+        setBorder(new EmptyBorder(0, 15, 0, 0));
 
         // Info panel
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.LINE_AXIS));
         titlePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Subject label
-        JLabel subjectLabel = new JLabel("Dreams");
-        subjectLabel.setFont(Style.FONT_HEADER);
-        titlePanel.add(subjectLabel);
-
-        // Separator label
-        JLabel separatorLabel = new JLabel("  -  ");
-        separatorLabel.setFont(Style.FONT_SMALL);
-        titlePanel.add(separatorLabel);
-
         // Identifier label
         JLabel identifierLabel = new JLabel("Kenny Park (Bran), 8:15PM | 04/24 ");
         identifierLabel.setFont(Style.FONT_SMALL);
+        identifierLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         titlePanel.add(identifierLabel);
-
         titlePanel.add(Box.createHorizontalGlue());
 
         boolean isOwner = true;
@@ -44,14 +35,15 @@ public class PostGUI extends JPanel {
             // Edit button
             JButton editButton = new JButton("<html><u>edit</u></html>");
             editButton.setFont(Style.FONT_SMALL);
-            editButton.setMaximumSize(new Dimension(15, 16));
+            editButton.setMaximumSize(new Dimension(20, 16));
             Style.styleButtonInvisibleBorder(editButton);
             titlePanel.add(editButton);
             editButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if(!NewPostFrame.isOpen()){
-                        new NewPostFrame(post).setAlwaysOnTop(true);
+                        // TODO change to edit comment
+//                        new NewPostFrame(post).setAlwaysOnTop(true);
                     }
                 }
             });
@@ -59,7 +51,7 @@ public class PostGUI extends JPanel {
             // Delete button
             JButton deleteButton = new JButton("<html><u>delete</u></html>");
             deleteButton.setFont(Style.FONT_SMALL);
-            deleteButton.setMaximumSize(new Dimension(15, 16));
+            deleteButton.setMaximumSize(new Dimension(20, 16));
             Style.styleButtonInvisibleBorder(deleteButton);
             titlePanel.add(deleteButton);
             deleteButton.addActionListener(new ActionListener() {
@@ -73,9 +65,8 @@ public class PostGUI extends JPanel {
         add(titlePanel);
 
         // Body area
-        JTextArea bodyArea = new JTextArea(4, 1);
+        JTextArea bodyArea = new JTextArea(2, 1);
         bodyArea.setText(sampleBody);
-        bodyArea.setAlignmentX(Component.LEFT_ALIGNMENT);
         bodyArea.setFont(Style.FONT_NORMAL);
         bodyArea.setLineWrap(true);
         bodyArea.setWrapStyleWord(true);
@@ -88,13 +79,6 @@ public class PostGUI extends JPanel {
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.LINE_AXIS));
         infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Comments button
-        int numComments = 5;
-        JButton commentsButton = new JButton(numComments + " impressions");
-        commentsButton.setFont(Style.FONT_SMALL);
-        Style.styleButton(commentsButton);
-        infoPanel.add(commentsButton);
 
         infoPanel.add(Box.createHorizontalGlue());
 

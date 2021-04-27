@@ -11,10 +11,25 @@ import java.awt.event.ActionListener;
  * @version April 20, 2021
  */
 public class EditProfileFrame extends JFrame {
+    static EditProfileFrame instance;
+
     JLabel errorLabel;
     String[] muffins = {"bran", "pumpkin-spice", "banana-nut", "chocolate", "blueberry", "oatmeal", "quiche"};
 
+    JTextField identifier;
+    JComboBox muffinBox;
+
     public EditProfileFrame() {
+        setupFrame();
+    }
+
+//    public EditProfileFrame(Profile profile) {
+//        setupFrame();
+//        identifier.setText(profile.getIdentifier());
+//        muffinBox.setSelectedIndex(profile.muffinIndex);
+//    }
+
+    public void setupFrame() {
         setSize(300, 260);
         setTitle("edit profile");
         setLocationRelativeTo(null);
@@ -44,17 +59,10 @@ public class EditProfileFrame extends JFrame {
         muffinLabel.setFont(Style.FONT_SMALL);
         panel.add(muffinLabel);
 
-        // Muffin field
-        JTextField muffinField = new JTextField(1);
-        muffinField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        muffinField.setFont(Style.FONT_NORMAL);
-        muffinField.setBorder(Style.BORDER_OUTLINE);
-//        panel.add(muffinField);
-
         add(panel, BorderLayout.NORTH);
 
         // Muffin dropdown
-        JComboBox muffinBox = new JComboBox(muffins);
+        muffinBox = new JComboBox(muffins);
         muffinBox.setAlignmentX(Component.LEFT_ALIGNMENT);
         muffinBox.setFont(Style.FONT_NORMAL);
         panel.add(muffinBox);
@@ -81,13 +89,11 @@ public class EditProfileFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String identifier = identifierField.getText();
-                String muffin = muffinField.getText();
+                int muffinIndex = muffinBox.getSelectedIndex();
                 if (identifier.isEmpty()) {
                     showErrorMessage("Identifier cannot be empty.");
                 } else if (!isIdentifierUnique(identifier)) {
                     showErrorMessage("Identifier is already in use.");
-                } else if (muffin.isEmpty()) {
-                    showErrorMessage("Muffin cannot be empty.");
                 }
                 else {
                     // Inputs are valid
@@ -112,5 +118,9 @@ public class EditProfileFrame extends JFrame {
     boolean isIdentifierUnique(String identifier) {
 
         return true;
+    }
+
+    public static boolean isOpen() {
+        return instance != null && instance.isShowing();
     }
 }

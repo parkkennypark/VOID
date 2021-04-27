@@ -12,9 +12,28 @@ import java.awt.event.WindowEvent;
  * @version April 20, 2021
  */
 public class NewPostFrame extends JFrame {
+    static NewPostFrame instance;
+
     JLabel errorLabel;
 
+    JTextField subjectField;
+    JTextArea bodyArea;
+    JButton postButton;
+
     public NewPostFrame() {
+        setupFrame();
+        setTitle("new post");
+    }
+
+    public NewPostFrame(Post post) {
+        setupFrame();
+        setTitle("edit post");
+        postButton.setText("save changes");
+        // TODO: set subject and body text
+    }
+
+    private void setupFrame() {
+        instance = this;
         setSize(300, 260);
         setTitle("new post");
         setLocationRelativeTo(null);
@@ -32,7 +51,7 @@ public class NewPostFrame extends JFrame {
         panel.add(subjectLabel);
 
         // Subject field
-        JTextField subjectField = new JTextField(1);
+        subjectField = new JTextField(1);
         subjectField.setAlignmentX(Component.LEFT_ALIGNMENT);
         subjectField.setFont(Style.FONT_NORMAL);
         subjectField.setBorder(Style.BORDER_OUTLINE);
@@ -45,7 +64,7 @@ public class NewPostFrame extends JFrame {
         panel.add(bodyLabel);
 
         // Body area/scroll pane
-        JTextArea bodyArea = new JTextArea(5, 1);
+        bodyArea = new JTextArea(5, 1);
         bodyArea.setAlignmentX(Component.LEFT_ALIGNMENT);
         bodyArea.setFont(Style.FONT_NORMAL);
         bodyArea.setLineWrap(true);
@@ -70,7 +89,7 @@ public class NewPostFrame extends JFrame {
         bottomPanel.add(errorLabel);
 
         // Post button
-        JButton postButton = new JButton("scream into the uncaring void");
+        postButton = new JButton("scream into the uncaring void");
         postButton.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
         postButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         postButton.setFont(Style.FONT_SMALL);
@@ -107,5 +126,9 @@ public class NewPostFrame extends JFrame {
     Post createPost() {
         // TODO: Create post from text fields
         return new Post();
+    }
+
+    public static boolean isOpen() {
+        return instance != null && instance.isShowing();
     }
 }
