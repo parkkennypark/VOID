@@ -11,7 +11,7 @@ import java.io.IOException;
  * @version 
  */
 public class Style {
-    static final String fontName = "Serif";
+    private static final String fontName = "Serif";
     static final Font FONT_TITLE = new Font(fontName, Font.PLAIN, 28);
     static final Font FONT_HEADER = new Font(fontName, Font.BOLD, 16);
     static final Font FONT_NORMAL = new Font(fontName, Font.PLAIN, 16);
@@ -26,5 +26,13 @@ public class Style {
         button.setContentAreaFilled(false);
         button.setOpaque(true);
         button.setBackground(Color.WHITE);
+    }
+
+    static void styleButtonInvisibleBorder(JButton button) {
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setMargin(new Insets(0, 0, 0, 0));
+        button.setContentAreaFilled(false);
+        button.setOpaque(false);
     }
 }

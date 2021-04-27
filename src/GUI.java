@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,9 +13,6 @@ import java.security.DigestException;
 public class GUI extends JComponent implements Runnable {
 
     GUI gui;
-    NewPostFrame newPostFrame;
-    EditProfileFrame editProfileFrame;
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new GUI());
@@ -37,8 +35,8 @@ public class GUI extends JComponent implements Runnable {
 
         /** Top panel (title) **/
         JPanel topPanel = new JPanel();
-        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-        topPanel.setBorder(BorderFactory.createCompoundBorder(Style.BORDER_OUTLINE, padding));
+//        topPanel.setBorder(BorderFactory.createCompoundBorder(Style.BORDER_OUTLINE, padding));
+//        topPanel.setBorder();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
 
         // Empty space
@@ -67,9 +65,8 @@ public class GUI extends JComponent implements Runnable {
         postButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (newPostFrame == null || !newPostFrame.isShowing()) {
-                    newPostFrame = new NewPostFrame();
-                    newPostFrame.setAlwaysOnTop(true);
+                if (!NewPostFrame.isOpen()) {
+                    new NewPostFrame().setAlwaysOnTop(true);
                 }
             }
         });
@@ -78,7 +75,7 @@ public class GUI extends JComponent implements Runnable {
 
         /** Center panel (post feed) **/
         JPanel centerPanel = new JPanel();
-        centerPanel.setBorder(padding);
+        centerPanel.setBorder(new EmptyBorder(10, 10, 0, 10));
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
         /** Feed title **/
@@ -94,7 +91,8 @@ public class GUI extends JComponent implements Runnable {
         feedTitlePanel.add(Box.createHorizontalGlue());
 
         // Muffin label
-        JLabel muffinLabel = new JLabel("most popular muffin: bran");
+        String mostPopularMuffin = CurrentSession.getMostPopularMuffin();
+        JLabel muffinLabel = new JLabel("most popular muffin: " + mostPopularMuffin);
         muffinLabel.setFont(Style.FONT_SMALL);
         vacuumLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         feedTitlePanel.add(muffinLabel);
@@ -104,40 +102,63 @@ public class GUI extends JComponent implements Runnable {
         // Feed scroll view
         JPanel feedPanel = new JPanel();
         feedPanel.setLayout(new BoxLayout(feedPanel, BoxLayout.Y_AXIS));
-        feedPanel.setBackground(Color.WHITE);
-//        feedPanel.setPreferredSize(new Dimension(500, 500));
 
-        feedPanel.add(new PostGUI());
-        feedPanel.add(new PostGUI());
-        feedPanel.add(new PostGUI());
-        feedPanel.add(new PostGUI());
-        feedPanel.add(new PostGUI());
-        feedPanel.add(new PostGUI());
-        feedPanel.add(new PostGUI());
-        feedPanel.add(new PostGUI());
+        // Populate the feed
+        for (Post post : CurrentSession.getPosts()) {
+            PostGUI postGUI = new PostGUI(post);
+//            feedPanel.add(postGUI);
+        }
+        feedPanel.add(new PostGUI(null));
+
+        feedPanel.add(new CommentGUI(null));
+        feedPanel.add(new CommentGUI(null));
+
+        // Add comment button
+        JPanel addCommentPanel = new JPanel();
+        addCommentPanel.setLayout(new BoxLayout(addCommentPanel, BoxLayout.LINE_AXIS));
+        addCommentPanel.setBorder(new EmptyBorder(0, 15, 0, 0));
+
+        JButton addCommentButton = new JButton("<html><u>add comment</u></html>");
+        addCommentButton.setFont(Style.FONT_SMALL);
+        addCommentButton.setMaximumSize(new Dimension(80, 16));
+        Style.styleButtonInvisibleBorder(addCommentButton);
+        addCommentPanel.add(addCommentButton);
+        addCommentButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!NewPostFrame.isOpen()){
+//                    new NewPostFrame(post).setAlwaysOnTop(true);
+                }
+            }
+        });
+
+        addCommentPanel.add(Box.createHorizontalGlue());
+        feedPanel.add(addCommentPanel);
+
+        feedPanel.add(new PostGUI(null));
+        feedPanel.add(new PostGUI(null));
 
 
         JScrollPane scrollPane = new JScrollPane(feedPanel);
         scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
         centerPanel.add(scrollPane);
 
-        content.add(centerPanel, BorderLayout.CENTER);
-
         /** Bottom panel (profile info) **/
         JPanel bottomPanel = new JPanel();
-        bottomPanel.setBorder(Style.BORDER_OUTLINE);
+        bottomPanel.setBorder(new EmptyBorder(2, 0, 2, 0));
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS));
 
-        JLabel accountLabel = new JLabel("signed in as:");
+        // Account label
+        String username = "Kenny Park";
+        JLabel accountLabel = new JLabel("signed in as: " + username);
         accountLabel.setFont(Style.FONT_SMALL);
         bottomPanel.add(accountLabel);
 
-        JLabel nameLabel = new JLabel("Kenny Park");
-        nameLabel.setFont(Style.FONT_SMALL);
-        bottomPanel.add(nameLabel);
-
         JLabel separatorLabel = new JLabel("  |  ");
-        bottomPanel.add(separatorLabel);
+//        bottomPanel.add(separatorLabel);
+        bottomPanel.add(Box.createHorizontalGlue());
 
+        // Edit profile button
         JButton editProfileButton = new JButton("edit profile");
         editProfileButton.setFont(Style.FONT_SMALL);
         Style.styleButton(editProfileButton);
@@ -145,14 +166,31 @@ public class GUI extends JComponent implements Runnable {
         editProfileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (editProfileFrame == null || !editProfileFrame.isShowing()) {
-                    editProfileFrame = new EditProfileFrame();
-                    editProfileFrame.setAlwaysOnTop(true);
+                if (!EditProfileFrame.isOpen()) {
+                    new EditProfileFrame().setAlwaysOnTop(true);
                 }
             }
         });
 
-        content.add(bottomPanel, BorderLayout.SOUTH);
+        bottomPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+
+        // Delete profile button
+        JButton deleteProfileButton = new JButton("delete profile");
+        deleteProfileButton.setFont(Style.FONT_SMALL);
+        Style.styleButton(deleteProfileButton);
+        bottomPanel.add(deleteProfileButton);
+        deleteProfileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!EditProfileFrame.isOpen()) {
+                    new EditProfileFrame().setAlwaysOnTop(true);
+                }
+            }
+        });
+
+        centerPanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        content.add(centerPanel, BorderLayout.CENTER);
 
         frame.setVisible(true);
     }
