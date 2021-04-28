@@ -35,7 +35,7 @@ public class Post {
         int i = 0;
         while(scan.hasNext()) {
             if(i == 0) {
-                this.postID = scan.next();
+                this.postID = Integer.parseInt(scan.next());
             } else if (i == 1) {
                 this.identifier = scan.next();
             } else if (i == 2) {
@@ -57,10 +57,10 @@ public class Post {
 
     public String toString() {
         /*return String.format("postID:%s,identifier:%s,muffin:%s,subject:%s,body:%s", this.postID, this.identifier,
-                this.muffin, this.subject, ts.body);*/hi
+                this.muffin, this.subject, ts.body);*/
 
-        return String.format("%s,%s,%s,%s,%s", this.postID, this.identifier,
-                this.muffin, this.subject, ts.body);
+        return String.format("%s,%s,%s,%s,%s", String.valueOf(this.postID), this.identifier,
+                this.muffin, this.subject, this.body);
     }
 
     public String getBody() {
@@ -75,10 +75,6 @@ public class Post {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         return dateFormat.format(date);
-    }
-
-    public String getAuthorName() {
-        return authorName;
     }
 
     public String getMuffin() {
