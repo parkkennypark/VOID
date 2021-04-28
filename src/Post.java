@@ -15,8 +15,7 @@ public class Post {
     private String timeStamp;
     private String authorName;
 
-
-    /*public Post(int postID, String identifier, String muffin, String subject, String body, String authorName) {
+    public Post(int postID, String identifier, String muffin, String subject, String body, String authorName) {
         this.postID = postID;
         this.identifier = identifier;
         this.subject = subject;
@@ -24,7 +23,7 @@ public class Post {
         this.muffin = muffin;
         this.body = body;
         this.timeStamp = this.getTimeStamp();
-    }*/
+    }
 
     public Post() {
         this.subject = null;
@@ -48,6 +47,10 @@ public class Post {
                 this.muffin, this.subject, this.body, this.authorName);
     }
 
+    public int getPostID() {
+        return postID;
+    }
+
     public String getBody() {
         return body;
     }
@@ -68,6 +71,10 @@ public class Post {
 
     public String getMuffin() {
         return muffin;
+    }
+
+    public void setPostID(int postID) {
+        this.postID = postID;
     }
 
     public void setSubject(String subject) {

@@ -13,7 +13,14 @@ import java.awt.event.ActionListener;
 public class PostGUI extends JPanel {
     String sampleBody = "Have you ever had a dream that you, um, you had, your, you- you could, you’ll do, you- you wants, you, you could do so, you- you’ll do, you could- you, you want, you want them to do you so much you could do anything?";
 
-    public PostGUI(Post post) {
+    public PostGUI(int postID) {
+        Post post = new Post();
+        try {
+            post = CurrentSession.getPostByID(postID);
+        } catch (PostNotFoundException postNotFoundException) {
+            postNotFoundException.printStackTrace();
+        }
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(new EmptyBorder(5, 2, 0, 2));
 
@@ -23,7 +30,7 @@ public class PostGUI extends JPanel {
         titlePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Subject label
-        JLabel subjectLabel = new JLabel("Dreams");
+        JLabel subjectLabel = new JLabel(post.getSubject());
         subjectLabel.setFont(Style.FONT_HEADER);
         titlePanel.add(subjectLabel);
 
@@ -33,7 +40,9 @@ public class PostGUI extends JPanel {
         titlePanel.add(separatorLabel);
 
         // Identifier label
-        JLabel identifierLabel = new JLabel("Kenny Park (Bran), 8:15PM | 04/24 ");
+        int muffinIndex = 0;
+        String identifierStr = post.getAuthorName() + " " + Muffin.values()[muffinIndex].label + ", " + post.getTimeStamp();
+        JLabel identifierLabel = new JLabel(identifierStr);
         identifierLabel.setFont(Style.FONT_SMALL);
         titlePanel.add(identifierLabel);
 
@@ -50,8 +59,8 @@ public class PostGUI extends JPanel {
             editButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(!NewPostFrame.isOpen()){
-                        new NewPostFrame(post).setAlwaysOnTop(true);
+                    if(!PostCreationFrame.isOpen()){
+                        new PostCreationFrame(postID).setAlwaysOnTop(true);
                     }
                 }
             });
@@ -74,7 +83,7 @@ public class PostGUI extends JPanel {
 
         // Body area
         JTextArea bodyArea = new JTextArea(4, 1);
-        bodyArea.setText(sampleBody);
+        bodyArea.setText(post.getBody());
         bodyArea.setAlignmentX(Component.LEFT_ALIGNMENT);
         bodyArea.setFont(Style.FONT_NORMAL);
         bodyArea.setLineWrap(true);

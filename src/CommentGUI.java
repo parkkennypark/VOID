@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +13,7 @@ import java.awt.event.ActionListener;
 public class CommentGUI extends JPanel {
     String sampleBody = "Neat";
 
-    public CommentGUI(Comment comment) {
+    public CommentGUI(int postID, int commentID) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(new EmptyBorder(0, 15, 0, 0));
 
@@ -41,7 +40,7 @@ public class CommentGUI extends JPanel {
             editButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(!NewPostFrame.isOpen()){
+                    if(!PostCreationFrame.isOpen()){
                         // TODO change to edit comment
 //                        new NewPostFrame(post).setAlwaysOnTop(true);
                     }

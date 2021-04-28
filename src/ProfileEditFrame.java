@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,8 +9,8 @@ import java.awt.event.ActionListener;
  * @author Kenny Park
  * @version April 20, 2021
  */
-public class EditProfileFrame extends JFrame {
-    static EditProfileFrame instance;
+public class ProfileEditFrame extends JFrame {
+    static ProfileEditFrame instance;
 
     JLabel errorLabel;
     String[] muffins = {"bran", "pumpkin-spice", "banana-nut", "chocolate", "blueberry", "oatmeal", "quiche"};
@@ -19,7 +18,7 @@ public class EditProfileFrame extends JFrame {
     JTextField identifier;
     JComboBox muffinBox;
 
-    public EditProfileFrame() {
+    public ProfileEditFrame() {
         setupFrame();
     }
 
@@ -94,8 +93,7 @@ public class EditProfileFrame extends JFrame {
                     showErrorMessage("Identifier cannot be empty.");
                 } else if (!isIdentifierUnique(identifier)) {
                     showErrorMessage("Identifier is already in use.");
-                }
-                else {
+                } else {
                     // Inputs are valid
                     // TODO: save changes
 
