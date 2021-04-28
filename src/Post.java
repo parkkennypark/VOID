@@ -9,20 +9,19 @@ import java.util.Date;
 import java.util.Scanner;
 public class Post {
     private int postID;
-    private String identifier;
+    private int profileID;
     private String muffin;
     private String subject;
     private String body;
     private String timeStamp;
 
 
-    public Post(int postID, String identifier, String muffin, String subject, String body) {
+    public Post(int postID, int profileID, String muffin, String subject, String body) {
         this.postID = postID;
-        this.identifier = identifier;
+        this.profileID = profileID;
         this.subject = subject;
         this.muffin = muffin;
         this.body = body;
-        this.timeStamp = this.getTimeStamp();
     }
 
     public Post() {
@@ -37,7 +36,7 @@ public class Post {
             if(i == 0) {
                 this.postID = Integer.parseInt(scan.next());
             } else if (i == 1) {
-                this.identifier = scan.next();
+                this.profileID = Integer.parseInt(scan.next());
             } else if (i == 2) {
                 this.muffin = scan.next();
             } else if (i == 3) {
@@ -59,8 +58,16 @@ public class Post {
         /*return String.format("postID:%s,identifier:%s,muffin:%s,subject:%s,body:%s", this.postID, this.identifier,
                 this.muffin, this.subject, ts.body);*/
 
-        return String.format("%s,%s,%s,%s,%s", String.valueOf(this.postID), this.identifier,
+        return String.format("%s,%s,%s,%s,%s", String.valueOf(this.postID), String.valueOf(this.profileID),
                 this.muffin, this.subject, this.body);
+    }
+
+    public int getPostID() {
+        return this.postID;
+    }
+
+    public int getProfileID() {
+        return this.profileID;
     }
 
     public String getBody() {
@@ -88,5 +95,10 @@ public class Post {
     public void setBody(String body) {
         this.body = body;
     }
+
+    public void setPostID(int postID) {
+        this.postID = postID;
+    }
+
 
 }
