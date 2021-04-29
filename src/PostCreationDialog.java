@@ -9,8 +9,8 @@ import java.awt.event.ActionListener;
  * @author Kenny Park
  * @version April 20, 2021
  */
-public class PostCreationFrame extends JFrame {
-    static PostCreationFrame instance;
+public class PostCreationDialog extends JDialog {
+    static PostCreationDialog instance;
 
     JLabel errorLabel;
 
@@ -19,59 +19,29 @@ public class PostCreationFrame extends JFrame {
     JButton postButton;
 
     // New post
-    public PostCreationFrame() {
-        setupFrame();
+    public PostCreationDialog() {
+        setupFrame(-1);
         setTitle("new post");
-        postButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String subject = subjectField.getText();
-                String body = bodyArea.getText();
-                if (subject.isEmpty()) {
-                    showErrorMessage("Subject cannot be empty.");
-                } else if (body.isEmpty()) {
-                    showErrorMessage("Body cannot be empty.");
-                } else {
-                    CurrentSession.sendPostToServer(-1, subject, body);
-                    dispose();
-                }
-            }
-        });
     }
 
     // Edit post
-    public PostCreationFrame(int postID) {
+    public PostCreationDialog(int postID) {
         Post post = new Post();
         try {
-            post = CurrentSession.getPostByID(postID);
+            post = LocalDatabase.getPostByID(postID);
         } catch (PostNotFoundException postNotFoundException) {
             postNotFoundException.printStackTrace();
         }
 
-        setupFrame();
+        setupFrame(postID);
         setTitle("edit post");
         postButton.setText("save changes");
         subjectField.setText(post.getSubject());
         bodyArea.setText(post.getBody());
         Post finalPost = post;
-        postButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String subject = subjectField.getText();
-                String body = bodyArea.getText();
-                if (subject.isEmpty()) {
-                    showErrorMessage("Subject cannot be empty.");
-                } else if (body.isEmpty()) {
-                    showErrorMessage("Body cannot be empty.");
-                } else {
-                    CurrentSession.sendPostToServer(finalPost.getPostID(), subject, body);
-                    dispose();
-                }
-            }
-        });
     }
 
-    private void setupFrame() {
+    private void setupFrame(int postID) {
         instance = this;
         setSize(300, 260);
         setTitle("new post");
@@ -134,6 +104,21 @@ public class PostCreationFrame extends JFrame {
         postButton.setFont(Style.FONT_SMALL);
         Style.styleButton(postButton);
         bottomPanel.add(postButton, BorderLayout.SOUTH);
+        postButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String subject = subjectField.getText();
+                String body = bodyArea.getText();
+                if (subject.isEmpty()) {
+                    showErrorMessage("Subject cannot be empty.");
+                } else if (body.isEmpty()) {
+                    showErrorMessage("Body cannot be empty.");
+                } else {
+                    LocalDatabase.sendPostToServer(postID, subject, body);
+                    dispose();
+                }
+            }
+        });
 
         add(bottomPanel, BorderLayout.SOUTH);
 
@@ -143,7 +128,6 @@ public class PostCreationFrame extends JFrame {
     void showErrorMessage(String message) {
         errorLabel.setText(message);
         errorLabel.setVisible(true);
-        //JOptionPane.showMessageDialog(this, message, "error", JOptionPane.ERROR_MESSAGE);
     }
 
     public static boolean isOpen() {

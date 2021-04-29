@@ -40,9 +40,10 @@ public class CommentGUI extends JPanel {
             editButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(!PostCreationFrame.isOpen()){
-                        // TODO change to edit comment
-//                        new NewPostFrame(post).setAlwaysOnTop(true);
+                    if(!PostCreationDialog.isOpen()){
+                        if(!CommentCreationDialog.isOpen()) {
+                            new CommentCreationDialog(postID, commentID);
+                        }
                     }
                 }
             });

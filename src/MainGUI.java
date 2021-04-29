@@ -3,9 +3,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Set;
 
 /**
  * @author Kenny Park
@@ -19,6 +16,7 @@ public class MainGUI extends JComponent implements Runnable {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new MainGUI());
+        LocalDatabase.testPopulateProfiles();
     }
 
     public static void updateGUI() {
@@ -72,8 +70,8 @@ public class MainGUI extends JComponent implements Runnable {
         postButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!PostCreationFrame.isOpen()) {
-                    new PostCreationFrame().setAlwaysOnTop(true);
+                if (!PostCreationDialog.isOpen()) {
+                    new PostCreationDialog();
                 }
             }
         });
@@ -98,7 +96,7 @@ public class MainGUI extends JComponent implements Runnable {
         feedTitlePanel.add(Box.createHorizontalGlue());
 
         // Best muffin label
-        String mostPopularMuffin = CurrentSession.getMostPopularMuffin();
+        String mostPopularMuffin = LocalDatabase.getMostPopularMuffin();
         JLabel muffinLabel = new JLabel("most popular muffin: " + mostPopularMuffin);
         muffinLabel.setFont(Style.FONT_SMALL);
         vacuumLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -135,8 +133,8 @@ public class MainGUI extends JComponent implements Runnable {
         editProfileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!ProfileEditFrame.isOpen()) {
-                    new ProfileEditFrame().setAlwaysOnTop(true);
+                if (!ProfileEditDialog.isOpen()) {
+                    new ProfileEditDialog();
                 }
             }
         });
@@ -151,8 +149,8 @@ public class MainGUI extends JComponent implements Runnable {
         deleteProfileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!ProfileEditFrame.isOpen()) {
-                    new ProfileEditFrame().setAlwaysOnTop(true);
+                if (!ProfileEditDialog.isOpen()) {
+                    new ProfileEditDialog().setAlwaysOnTop(true);
                 }
             }
         });

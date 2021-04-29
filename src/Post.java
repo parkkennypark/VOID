@@ -10,18 +10,17 @@ import java.util.Scanner;
 public class Post {
     private int postID;
     private int profileID;
-    private String muffin;
     private String subject;
     private String body;
     private String timeStamp;
 
 
-    public Post(int postID, int profileID, String muffin, String subject, String body) {
+    public Post(int postID, int profileID, String subject, String body, String timeStamp) {
         this.postID = postID;
         this.profileID = profileID;
         this.subject = subject;
-        this.muffin = muffin;
         this.body = body;
+        this.timeStamp = timeStamp;
     }
 
     public Post() {
@@ -38,10 +37,8 @@ public class Post {
             } else if (i == 1) {
                 this.profileID = Integer.parseInt(scan.next());
             } else if (i == 2) {
-                this.muffin = scan.next();
-            } else if (i == 3) {
                 this.subject = scan.next();
-            } else if (i == 4) {
+            } else if (i == 3) {
                 this.body = scan.next();
             }
             i++;
@@ -51,19 +48,14 @@ public class Post {
     public Post(String subject, String body) {
         this.subject = subject;
         this.body = body;
-        this.timeStamp = this.getTimeStamp();
     }
 
     public String toString() {
         /*return String.format("postID:%s,identifier:%s,muffin:%s,subject:%s,body:%s", this.postID, this.identifier,
                 this.muffin, this.subject, ts.body);*/
 
-        return String.format("%s,%s,%s,%s,%s", String.valueOf(this.postID), String.valueOf(this.profileID),
-                this.muffin, this.subject, this.body);
-    }
-
-    public int getPostID() {
-        return this.postID;
+        return String.format("%s,%s,%s,%s", String.valueOf(this.postID), String.valueOf(this.profileID),
+                this.subject, this.body);
     }
 
     public int getProfileID() {
@@ -83,17 +75,7 @@ public class Post {
     }
 
     public String getTimeStamp() {
-        Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        return dateFormat.format(date);
-    }
-
-    public String getMuffin() {
-        return muffin;
-    }
-
-    public void setPostID(int postID) {
-        this.postID = postID;
+        return timeStamp;
     }
 
     public void setSubject(String subject) {
@@ -108,5 +90,7 @@ public class Post {
         this.postID = postID;
     }
 
-
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 }

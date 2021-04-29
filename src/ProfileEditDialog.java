@@ -9,24 +9,23 @@ import java.awt.event.ActionListener;
  * @author Kenny Park
  * @version April 20, 2021
  */
-public class ProfileEditFrame extends JFrame {
-    static ProfileEditFrame instance;
+public class ProfileEditDialog extends JDialog {
+    static ProfileEditDialog instance;
 
     JLabel errorLabel;
-    String[] muffins = {"bran", "pumpkin-spice", "banana-nut", "chocolate", "blueberry", "oatmeal", "quiche"};
 
     JTextField identifier;
     JComboBox muffinBox;
 
-    public ProfileEditFrame() {
+    public ProfileEditDialog() {
         setupFrame();
     }
 
-//    public EditProfileFrame(Profile profile) {
-//        setupFrame();
+    public ProfileEditDialog(Profile profile) {
+        setupFrame();
 //        identifier.setText(profile.getIdentifier());
-//        muffinBox.setSelectedIndex(profile.muffinIndex);
-//    }
+        muffinBox.setSelectedIndex(profile.getMuffinIndex());
+    }
 
     public void setupFrame() {
         setSize(300, 260);
@@ -61,7 +60,7 @@ public class ProfileEditFrame extends JFrame {
         add(panel, BorderLayout.NORTH);
 
         // Muffin dropdown
-        muffinBox = new JComboBox(muffins);
+        muffinBox = new JComboBox(Muffin.getMuffinLabels());
         muffinBox.setAlignmentX(Component.LEFT_ALIGNMENT);
         muffinBox.setFont(Style.FONT_NORMAL);
         panel.add(muffinBox);
@@ -110,7 +109,6 @@ public class ProfileEditFrame extends JFrame {
     void showErrorMessage(String message) {
         errorLabel.setText(message);
         errorLabel.setVisible(true);
-        //JOptionPane.showMessageDialog(this, message, "error", JOptionPane.ERROR_MESSAGE);
     }
 
     boolean isIdentifierUnique(String identifier) {

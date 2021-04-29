@@ -16,7 +16,7 @@ public class PostGUI extends JPanel {
     public PostGUI(int postID) {
         Post post = new Post();
         try {
-            post = CurrentSession.getPostByID(postID);
+            post = LocalDatabase.getPostByID(postID);
         } catch (PostNotFoundException postNotFoundException) {
             postNotFoundException.printStackTrace();
         }
@@ -41,7 +41,7 @@ public class PostGUI extends JPanel {
 
         // Identifier label
         int muffinIndex = 0;
-        String identifierStr = post.getAuthorName() + " " + Muffin.values()[muffinIndex].label + ", " + post.getTimeStamp();
+        String identifierStr = post.getProfileID() + " " + Muffin.values()[muffinIndex].label + ", " + post.getTimeStamp();
         JLabel identifierLabel = new JLabel(identifierStr);
         identifierLabel.setFont(Style.FONT_SMALL);
         titlePanel.add(identifierLabel);
@@ -59,8 +59,8 @@ public class PostGUI extends JPanel {
             editButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(!PostCreationFrame.isOpen()){
-                        new PostCreationFrame(postID).setAlwaysOnTop(true);
+                    if(!PostCreationDialog.isOpen()){
+                        new PostCreationDialog(postID).setAlwaysOnTop(true);
                     }
                 }
             });

@@ -26,7 +26,7 @@ public class FeedPanel extends JPanel {
         removeAll();
 
         // Populate the feed
-        Hashtable<Integer, Post> postHashtable = CurrentSession.getPosts();
+        Hashtable<Integer, Post> postHashtable = LocalDatabase.getPosts();
         Set<Integer> postIDSet = postHashtable.keySet();
         Integer[] postIDArray = new Integer[postIDSet.size()];
         postIDArray = postIDSet.toArray(postIDArray);
@@ -54,8 +54,10 @@ public class FeedPanel extends JPanel {
             addCommentButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (!PostCreationFrame.isOpen()) {
-//                    new NewPostFrame(post).setAlwaysOnTop(true);
+                    if(!PostCreationDialog.isOpen()){
+                        if(!CommentCreationDialog.isOpen()) {
+                            new CommentCreationDialog(postID);
+                        }
                     }
                 }
             });
