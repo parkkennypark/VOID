@@ -111,7 +111,7 @@ public class MainGUI extends JComponent implements Runnable {
 
         /* Bottom panel (profile info) */
         JPanel bottomPanel = new JPanel();
-        bottomPanel.setBorder(new EmptyBorder(2, 0, 2, 0));
+        bottomPanel.setBorder(new EmptyBorder(4, 0, 4, 0));
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS));
 
         // Account label
