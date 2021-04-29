@@ -3,35 +3,48 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 /**
  *
  *
- * @author Kenny Park
- * @version 
+ * @author Moosh Khan
+ * @version client
  */
 public class Client {
-    public static void main(String[] args) throws IOException {
-        Scanner scan = new Scanner(System.in);
 
-        Socket socket = new Socket("localhost", 4242);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter writer = new PrintWriter(socket.getOutputStream());
+    private Socket socket;
+    private BufferedReader reader;
+    private PrintWriter writer;
 
-        System.out.println("What do you want to send to the server?");
-        String response = scan.nextLine();
+    public Client(){
+        try{
+            socket = new Socket("localhost", 4242);
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            writer = new PrintWriter(socket.getOutputStream());
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
 
-        writer.write(response);
+    public void sendPostToServer(String postStr){
+        writer.write("#POST " + postStr);
         writer.println();
-        writer.flush(); // ensure data is sent to the server
-        System.out.printf("Sent to server:\n%s\n", response);
+        writer.flush();
+    }
 
-        String s1 = reader.readLine();
-        System.out.printf("Received from server:\n%s\n", s1);
+    public void sendProfileToServer(String profileStr){
+        writer.write("#PROFILE " + profileStr);
+        writer.println();
+        writer.flush();
+    }
 
-        writer.close();
-        reader.close();
-
+    public void cleanUp(){
+        try{
+            writer.close();
+            reader.close();
+            socket.close();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
     }
 }
