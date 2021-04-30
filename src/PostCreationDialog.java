@@ -114,7 +114,10 @@ public class PostCreationDialog extends JDialog {
                 } else if (body.isEmpty()) {
                     showErrorMessage("Body cannot be empty.");
                 } else {
-                    LocalDatabase.sendPostToServer(postID, subject, body);
+                    int profileID = LocalDatabase.getLocalProfile().getProfileID();
+                    String timestamp = Application.getTimeStamp();
+                    Post post = new Post(postID, profileID, subject, body, timestamp);
+                    Client.instance.sendPostToServer(post);
                     dispose();
                 }
             }

@@ -93,10 +93,20 @@ class RequestHandler extends Thread {
     }
 
     public void handleIncomingMessage(String message) {
-        if (message.split(" ")[0].equals("#POST")) {
-            System.out.println("Post: " + message);
-        } else if (message.split(" ")[0].equals("#PROFILE")) {
-            System.out.println("Creating profile with details: " + message);
+        if (message.contains("#POST")) {
+            String postStr = message.substring(6);
+            System.out.println("Received post: " + postStr);
+            Post post = new Post(postStr);
+            ServerDatabase.putPost(post);
+
+        } else if (message.contains("#PROFILE")) {
+            String profileStr = message.substring(9);
+            System.out.println("Received profile: " + profileStr);
+            Profile profile = new Profile(profileStr);
+            ServerDatabase.putProfile(profile);
+        } else if (message.contains("#COMMENT")) {
+            String commentStr = message.substring(9);
+            System.out.println("Received comment: " + commentStr);
         }
     }
 }

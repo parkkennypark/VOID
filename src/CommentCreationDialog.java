@@ -94,8 +94,8 @@ public class CommentCreationDialog extends JDialog {
                 if (text.isEmpty()) {
                     showErrorMessage("Comment cannot be empty.");
                 } else {
-                    // TODO: SEND TO DATABASE
-//                    LocalDatabase.(postID, subject, body);
+                    Comment comment = new Comment(postID, commentID, text);
+                    Client.instance.sendCommentToServer(comment);
                     dispose();
                 }
             }

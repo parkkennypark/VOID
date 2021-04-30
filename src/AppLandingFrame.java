@@ -5,18 +5,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- *
- *
  * @author Kenny Park
- * @version 
  */
 public class AppLandingFrame extends JFrame {
     Container content;
 
+    JLabel errorLabel;
+
     public AppLandingFrame() {
-        setTitle("login");
+        setTitle("void");
         setSize(300, 300);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         content = getContentPane();
         content.setLayout(new BorderLayout());
 
@@ -137,6 +137,13 @@ public class AppLandingFrame extends JFrame {
         muffinBox.setFont(Style.FONT_NORMAL);
         panel.add(muffinBox);
 
+        // Error message
+        errorLabel = new JLabel();
+        errorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        errorLabel.setFont(Style.FONT_SMALL);
+        errorLabel.setForeground(Color.red);
+        panel.add(errorLabel);
+
         content.add(panel, BorderLayout.NORTH);
 
         // Bottom panel
@@ -162,6 +169,25 @@ public class AppLandingFrame extends JFrame {
         Style.styleButton(signUpButton);
         signUpButton.setMargin(null);
         bottomPanel.add(signUpButton);
+        signUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String identifier = identifierField.getText();
+                String password = String.valueOf(passwordField.getPassword());
+                if (identifier.isEmpty()) {
+                    showErrorMessage("Identifier cannot be empty.");
+                } else if (password.isEmpty()) {
+                    showErrorMessage("Password cannot be empty.");
+                } else {
+                    if (trySignUp(identifier, password, muffinBox.getSelectedIndex())) {
+                        Application.openMainGUI();
+                        dispose();
+                    } else {
+                        showErrorMessage("Identifier is in use.");
+                    }
+                }
+            }
+        });
 
         content.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -207,6 +233,15 @@ public class AppLandingFrame extends JFrame {
         passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(passwordField);
 
+        panel.add(Box.createVerticalGlue());
+
+        // Error message
+        errorLabel = new JLabel();
+        errorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        errorLabel.setFont(Style.FONT_SMALL);
+        errorLabel.setForeground(Color.red);
+        panel.add(errorLabel);
+
         content.add(panel, BorderLayout.NORTH);
 
         // Bottom panel
@@ -232,9 +267,58 @@ public class AppLandingFrame extends JFrame {
         Style.styleButton(loginButton);
         loginButton.setMargin(null);
         bottomPanel.add(loginButton);
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String identifier = identifierField.getText();
+                String password = String.valueOf(passwordField.getPassword());
+                if (identifier.isEmpty()) {
+                    showErrorMessage("Identifier cannot be empty.");
+                } else if (password.isEmpty()) {
+                    showErrorMessage("Password cannot be empty.");
+                } else {
+                    if (tryLogin(identifier, password)) {
+                        Application.openMainGUI();
+                        dispose();
+                    } else {
+                        showErrorMessage("Invalid login credentials.");
+                    }
+                }
+            }
+        });
 
         content.add(bottomPanel, BorderLayout.SOUTH);
 
         setVisible(true);
+    }
+
+    boolean trySignUp(String identifier, String password, int muffinIndex) {
+        if (!LocalDatabase.isIdentifierUnique(identifier)) {
+            return false;
+        }
+
+        Profile profile = new Profile(-1, identifier, password, muffinIndex);
+        Client.instance.sendProfileToServer(profile);
+
+        // TODO: this is temporary
+        LocalDatabase.setLocalProfile(profile);
+        return true;
+    }
+
+    boolean tryLogin(String identifier, String password) {
+        try {
+            if (LocalDatabase.isPasswordCorrect(identifier, password)) {
+                LocalDatabase.setLocalProfile(LocalDatabase.getProfileByIdentifier(identifier));
+                return true;
+            }
+        } catch (ProfileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    void showErrorMessage(String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
     }
 }

@@ -8,35 +8,28 @@ import java.awt.event.ActionListener;
  * @author Kenny Park
  * @version April 20, 2021
  */
-public class MainGUI extends JComponent implements Runnable {
-
-    MainGUI mainGui;
+public class MainAppFrame extends JFrame {
 
     public static JFrame frame;
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new MainGUI());
-        LocalDatabase.testPopulateProfiles();
-    }
 
     public static void updateGUI() {
         frame.setVisible(true);
     }
 
-    @Override
-    public void run() {
+    public MainAppFrame() {
+        frame = this;
+
         /* set up JFrame */
-        frame = new JFrame("void chat");
-        frame.setSize(600, 800);
-        frame.setMinimumSize(new Dimension(500, 300));
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("void");
+        setSize(600, 800);
+        setMinimumSize(new Dimension(500, 300));
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Container content = frame.getContentPane();
+        Container content = getContentPane();
         content.setLayout(new BorderLayout());
-        mainGui = new MainGUI();
 
-        content.add(mainGui, BorderLayout.CENTER);
+//        content.add(mainGui, BorderLayout.CENTER);
 
         /* Top panel (title) */
         JPanel topPanel = new JPanel();
@@ -115,8 +108,8 @@ public class MainGUI extends JComponent implements Runnable {
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS));
 
         // Account label
-        String username = "Kenny Park";
-        JLabel accountLabel = new JLabel("signed in as: " + username);
+        String identifier = LocalDatabase.getLocalProfile().getIdentifier();
+        JLabel accountLabel = new JLabel("signed in as: " + identifier);
         accountLabel.setFont(Style.FONT_SMALL);
         bottomPanel.add(accountLabel);
 
@@ -134,7 +127,7 @@ public class MainGUI extends JComponent implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!ProfileEditDialog.isOpen()) {
-                    new ProfileEditDialog();
+                    new ProfileEditDialog(LocalDatabase.getLocalProfile().getProfileID());
                 }
             }
         });
@@ -150,7 +143,7 @@ public class MainGUI extends JComponent implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!ProfileEditDialog.isOpen()) {
-                    new ProfileEditDialog().setAlwaysOnTop(true);
+
                 }
             }
         });
@@ -159,6 +152,6 @@ public class MainGUI extends JComponent implements Runnable {
 
         content.add(centerPanel, BorderLayout.CENTER);
 
-        frame.setVisible(true);
+        setVisible(true);
     }
 }

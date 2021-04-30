@@ -40,15 +40,23 @@ public class PostGUI extends JPanel {
         titlePanel.add(separatorLabel);
 
         // Identifier label
-        int muffinIndex = 0;
-        String identifierStr = post.getProfileID() + " " + Muffin.values()[muffinIndex].label + ", " + post.getTimeStamp();
+        Profile profile = new Profile();
+        try {
+            profile = LocalDatabase.getProfileByID(post.getProfileID());
+        } catch (ProfileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String identifier = profile.getIdentifier();
+        String muffin = Muffin.values()[profile.getMuffinIndex()].label;
+        String timeStamp = post.getTimeStamp();
+        String identifierStr = identifier + " (" + muffin + "), " + timeStamp;
         JLabel identifierLabel = new JLabel(identifierStr);
         identifierLabel.setFont(Style.FONT_SMALL);
         titlePanel.add(identifierLabel);
 
         titlePanel.add(Box.createHorizontalGlue());
 
-        boolean isOwner = true;
+        boolean isOwner = LocalDatabase.getLocalProfile().getProfileID() == post.getProfileID();
         if (isOwner) {
             // Edit button
             JButton editButton = new JButton("<html><u>edit</u></html>");
