@@ -16,7 +16,7 @@ public class PostGUI extends JPanel {
     public PostGUI(int postID) {
         Post post = new Post();
         try {
-            post = LocalDatabase.getPostByID(postID);
+            post = Database.getPostByID(postID);
         } catch (PostNotFoundException postNotFoundException) {
             postNotFoundException.printStackTrace();
         }
@@ -42,7 +42,7 @@ public class PostGUI extends JPanel {
         // Identifier label
         Profile profile = new Profile();
         try {
-            profile = LocalDatabase.getProfileByID(post.getProfileID());
+            profile = Database.getProfileByID(post.getProfileID());
         } catch (ProfileNotFoundException e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ public class PostGUI extends JPanel {
 
         titlePanel.add(Box.createHorizontalGlue());
 
-        boolean isOwner = LocalDatabase.getLocalProfile().getProfileID() == post.getProfileID();
+        boolean isOwner = Application.getLocalProfile().getProfileID() == post.getProfileID();
         if (isOwner) {
             // Edit button
             JButton editButton = new JButton("<html><u>edit</u></html>");
@@ -100,24 +100,6 @@ public class PostGUI extends JPanel {
         JScrollPane scrollPane = new JScrollPane(bodyArea);
         scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(scrollPane);
-
-        // Info panel
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.LINE_AXIS));
-        infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Comments button
-        int numComments = 5;
-        JButton commentsButton = new JButton(numComments + " impressions");
-        commentsButton.setFont(Style.FONT_SMALL);
-        Style.styleButton(commentsButton);
-        infoPanel.add(commentsButton);
-
-        infoPanel.add(Box.createHorizontalGlue());
-
-
-//        add(infoPanel);
-
 
         setMaximumSize(new Dimension(getMaximumSize().width, getPreferredSize().height));
         setVisible(true);

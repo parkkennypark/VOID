@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -8,7 +9,7 @@ import java.util.Scanner;
  * @author Kenny Park
  * @version
  */
-public class Comment {
+public class Comment implements Serializable {
     private int postIDReplyingTo;
     private int commentID;
     private String text;

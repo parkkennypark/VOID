@@ -5,19 +5,31 @@ import java.util.Set;
  * @author Kenny Park
  */
 public class Database {
-    private static final Hashtable<Integer, Post> posts = new Hashtable<>();
-    private static final Hashtable<Integer, Profile> profiles = new Hashtable<>();
+    private static Hashtable<Integer, Post> posts = new Hashtable<>();
+    private static Hashtable<Integer, Profile> profiles = new Hashtable<>();
     private static int highestPostID = 0;
     private static int highestProfileID = 0;
 
-    public static void putPost(Post post) {
+    public static Post putPost(Post post) {
         int postKey = post.getPostID() == -1 ? ++highestPostID : post.getPostID();
+        post.setPostID(postKey);
         posts.put(postKey, post);
+        System.out.println("Post ID " + postKey + " set.");
+//        return new Packet(Packet.PacketType.POST_HASHTABLE, posts);
+        return post;
     }
 
-    public static void putProfile(Profile profile) {
+    public static Profile putProfile(Profile profile) {
         int profileKey = profile.getProfileID() == -1 ? ++highestProfileID : profile.getProfileID();
+        profile.setProfileID(profileKey);
         profiles.put(profileKey, profile);
+        System.out.println("Profile ID " + profileKey + " set.");
+//        return new Packet(Packet.PacketType.PROFILE_HASHTABLE, profiles);
+        return profile;
+    }
+
+    public static int getHighestProfileID() {
+        return highestProfileID;
     }
 
     public static Hashtable<Integer, Post> getPosts() {
@@ -25,6 +37,16 @@ public class Database {
     }
 
     public static Hashtable<Integer, Profile> getProfiles() { return profiles; }
+
+    public static void setPosts(Hashtable<Integer, Post> newPosts) {
+        posts = newPosts;
+//        System.out.println("Posts set. Number of posts: " + newPosts.size());
+    }
+
+    public static void setProfiles(Hashtable<Integer, Profile> newProfiles) {
+        profiles = newProfiles;
+//        System.out.println("Profiles set. Number of profiles: " + profiles.size());
+    }
 
     public static Post getPostByID(int postID) throws PostNotFoundException {
         if (!posts.containsKey(postID)) {
@@ -37,6 +59,7 @@ public class Database {
         if (!profiles.containsKey(profileID)) {
             throw new ProfileNotFoundException("Profile with ID " + profileID + " not found.");
         }
+        System.out.println(profiles.get(profileID));
         return profiles.get(profileID);
     }
 

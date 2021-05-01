@@ -16,23 +16,26 @@ public class FeedPanel extends JPanel {
     public static FeedPanel instance;
 
 
-    public FeedPanel() {
-        updateFeed();
-        instance = this;
+    public static void updateGUI() {
+        if(instance != null) {
+            instance.populateFeed();
+        }
     }
 
-    public void updateFeed() {
+    public FeedPanel() {
+        instance = this;
+        populateFeed();
+    }
+
+    public void populateFeed() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         removeAll();
 
         // Populate the feed
-        Hashtable<Integer, Post> postHashtable = LocalDatabase.getPosts();
+        Hashtable<Integer, Post> postHashtable = Database.getPosts();
         Set<Integer> postIDSet = postHashtable.keySet();
-        Integer[] postIDArray = new Integer[postIDSet.size()];
-        postIDArray = postIDSet.toArray(postIDArray);
-        for (int i = postIDArray.length - 1; i >= 0; i--) {
-            int postID = postIDArray[i];
-            System.out.println("Adding post " + postID + " to feed.");
+        System.out.println("Number of posts: " + postIDSet.size());
+        for(int postID : postIDSet) {
             PostGUI postGUI = new PostGUI(postID);
             add(postGUI);
             // TODO: for each comment ...
@@ -66,7 +69,7 @@ public class FeedPanel extends JPanel {
         }
 
         // No posts
-        if (postIDArray.length == 0) {
+        if (postIDSet.size() == 0) {
             System.out.println("No posts to add.");
             add(Box.createRigidArea(new Dimension(0, 10)));
 

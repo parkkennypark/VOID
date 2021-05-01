@@ -4,10 +4,11 @@
  * @author Kenny Park
  * @version April 20, 2021
  */
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-public class Post {
+public class Post implements Serializable {
     private int postID;
     private int profileID;
     private String subject;

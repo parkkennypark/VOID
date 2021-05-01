@@ -1,10 +1,12 @@
+import java.io.Serializable;
+
 /**
  *
  *
  * @author Danilo Dragovic
  * @version 
  */
-public class Profile {
+public class Profile implements Serializable {
 	private String identifier;
 	private String password;
 	private int muffinIndex;

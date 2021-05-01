@@ -25,7 +25,7 @@ public class CommentCreationDialog extends JDialog {
     public CommentCreationDialog(int postID, int commentID) {
         Comment comment = null;
         try {
-            comment = LocalDatabase.getCommentByID(postID, commentID);
+            comment = Database.getCommentByID(postID, commentID);
         } catch (CommentNotFoundException e) {
             e.printStackTrace();
         }
@@ -37,7 +37,7 @@ public class CommentCreationDialog extends JDialog {
     private void setupFrame(int postID, int commentID) {
         Post post = null;
         try {
-            post = LocalDatabase.getPostByID(postID);
+            post = Database.getPostByID(postID);
         } catch (PostNotFoundException e) {
             e.printStackTrace();
             return;

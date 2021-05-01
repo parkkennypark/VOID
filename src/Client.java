@@ -1,18 +1,20 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import javax.xml.crypto.Data;
+import java.awt.image.DataBuffer;
+import java.io.*;
 import java.net.Socket;
+import java.util.HashSet;
+import java.util.Hashtable;
 
 /**
  * @author Moosh Khan
  * @version client
  */
-public class Client implements Runnable{
+public class Client implements Runnable {
     public static Client instance;
 
     private Socket socket;
-    private BufferedReader reader;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
     private PrintWriter writer;
 
     private static boolean connected;
@@ -21,25 +23,67 @@ public class Client implements Runnable{
         instance = this;
         try {
             socket = new Socket("localhost", 4242);
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new PrintWriter(socket.getOutputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+
+//            writer = new PrintWriter(socket.getOutputStream());
+
             connected = true;
+            System.out.println("Connected");
+            Thread t = new Thread(this);
+            t.start();
+
         } catch (IOException e) {
             e.printStackTrace();
             connected = false;
+            System.out.println("Failed to connect");
         }
     }
 
     @Override
     public void run() {
-        while(true) {
-            String input = null;
+        while (true) {
+            Object input;
             try {
-                input = reader.readLine();
-            } catch (IOException e) {
+                input = in.readObject();
+
+                if (input instanceof Packet) {
+                    Packet packet = (Packet) input;
+                    System.out.println("Received " + packet.getPacketType() + ": " + packet.getObject());
+                    switch (packet.getPacketType()) {
+                        case POST -> {
+                            Database.putPost((Post) packet.getObject());
+                            Application.updateGUI();
+                        }
+                        case PROFILE -> {
+                            Database.putProfile((Profile)packet.getObject());
+                            Application.updateGUI();
+                        }
+                        case POST_HASHTABLE -> {
+                            Database.setPosts((Hashtable) packet.getObject());
+                        }
+                        case PROFILE_HASHTABLE -> {
+                            Database.setProfiles((Hashtable) packet.getObject());
+                        }
+                        case NEW_PROFILE_ID_RESPONSE -> {
+                            int ID = (int) packet.getObject();
+                            Application.setLocalProfileID(ID);
+                            Application.openMainGUI();
+                        }
+                    }
+                }
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            System.out.println(input);
+        }
+    }
+
+    public void sendPacketToServer(Packet packet) {
+        try {
+            out.writeObject(packet);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -70,7 +114,8 @@ public class Client implements Runnable{
     public void cleanUp() {
         try {
             writer.close();
-            reader.close();
+            in.close();
+            out.close();
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();

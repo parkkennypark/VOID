@@ -10,15 +10,20 @@ import java.awt.event.ActionListener;
  */
 public class MainAppFrame extends JFrame {
 
-    public static JFrame frame;
+    public static MainAppFrame instance;
 
     public static void updateGUI() {
-        frame.setVisible(true);
+        if(instance != null) {
+            instance.makeFrame();
+        }
     }
 
     public MainAppFrame() {
-        frame = this;
+        instance = this;
+        makeFrame();
+    }
 
+    public void makeFrame() {
         /* set up JFrame */
         setTitle("void");
         setSize(600, 800);
@@ -89,7 +94,7 @@ public class MainAppFrame extends JFrame {
         feedTitlePanel.add(Box.createHorizontalGlue());
 
         // Best muffin label
-        String mostPopularMuffin = LocalDatabase.getMostPopularMuffin();
+        String mostPopularMuffin = Application.getMostPopularMuffin();
         JLabel muffinLabel = new JLabel("most popular muffin: " + mostPopularMuffin);
         muffinLabel.setFont(Style.FONT_SMALL);
         vacuumLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -108,7 +113,7 @@ public class MainAppFrame extends JFrame {
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS));
 
         // Account label
-        String identifier = LocalDatabase.getLocalProfile().getIdentifier();
+        String identifier = Application.getLocalProfile().getIdentifier();
         JLabel accountLabel = new JLabel("signed in as: " + identifier);
         accountLabel.setFont(Style.FONT_SMALL);
         bottomPanel.add(accountLabel);
@@ -127,7 +132,7 @@ public class MainAppFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!ProfileEditDialog.isOpen()) {
-                    new ProfileEditDialog(LocalDatabase.getLocalProfile().getProfileID());
+                    new ProfileEditDialog(Application.getLocalProfile().getProfileID());
                 }
             }
         });

@@ -28,7 +28,7 @@ public class PostCreationDialog extends JDialog {
     public PostCreationDialog(int postID) {
         Post post = new Post();
         try {
-            post = LocalDatabase.getPostByID(postID);
+            post = Database.getPostByID(postID);
         } catch (PostNotFoundException postNotFoundException) {
             postNotFoundException.printStackTrace();
         }
@@ -114,10 +114,11 @@ public class PostCreationDialog extends JDialog {
                 } else if (body.isEmpty()) {
                     showErrorMessage("Body cannot be empty.");
                 } else {
-                    int profileID = LocalDatabase.getLocalProfile().getProfileID();
+                    int profileID = Application.getLocalProfile().getProfileID();
                     String timestamp = Application.getTimeStamp();
                     Post post = new Post(postID, profileID, subject, body, timestamp);
-                    Client.instance.sendPostToServer(post);
+                    Client.instance.sendPacketToServer(new Packet(Packet.PacketType.POST, post));
+//                    Client.instance.sendPostToServer(post);
                     dispose();
                 }
             }
