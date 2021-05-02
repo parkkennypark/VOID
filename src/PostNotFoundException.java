@@ -4,7 +4,7 @@
  * @author Kenny Park
  * @version April 24, 2021
  */
-public class PostNotFoundException extends Exception{
+public class PostNotFoundException extends Exception {
     public PostNotFoundException() {
         super();
     }

@@ -3,11 +3,10 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Hashtable;
-import java.util.Set;
+import java.util.*;
 
 /**
- * The panel that stores all the feed info.
+ * The panel that displays all posts and comments.
  *
  * @author Kenny Park
  * @version April 27, 2021
@@ -16,30 +15,37 @@ public class FeedPanel extends JPanel {
     public static FeedPanel instance;
 
 
-    public FeedPanel() {
-        updateFeed();
-        instance = this;
+    public static void updateGUI() {
+        if (instance != null) {
+            instance.populateFeed();
+        }
     }
 
-    public void updateFeed() {
+    public FeedPanel() {
+        instance = this;
+        populateFeed();
+    }
+
+    public void populateFeed() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         removeAll();
 
-        // Populate the feed
-        Hashtable<Integer, Post> postHashtable = LocalDatabase.getPosts();
-        Set<Integer> postIDSet = postHashtable.keySet();
-        Integer[] postIDArray = new Integer[postIDSet.size()];
-        postIDArray = postIDSet.toArray(postIDArray);
-        for (int i = postIDArray.length - 1; i >= 0; i--) {
-            int postID = postIDArray[i];
-            System.out.println("Adding post " + postID + " to feed.");
-            PostGUI postGUI = new PostGUI(postID);
+        // Populate the feed. Treemap for sort.
+        TreeMap<Integer, Post> sortedPosts = new TreeMap<Integer, Post>(Client.database.getPosts());
+        Set<Integer> postKeySet = sortedPosts.descendingKeySet();
+        System.out.println("Number of posts: " + sortedPosts.size());
+        for (Integer postKey : postKeySet) {
+            Post post = sortedPosts.get(postKey);
+            PostGUI postGUI = new PostGUI(post.getPostID());
             add(postGUI);
-            // TODO: for each comment ...
-//            feedPanel.add(new CommentGUI(postID, 0));
-//        feedPanel.add(new PostGUI(0));
-//        feedPanel.add(new CommentGUI(0, 0));
-//        feedPanel.add(new CommentGUI(0, 0));
+
+            TreeMap<Integer, Comment> sortedComments = new TreeMap<Integer, Comment>(post.getComments());
+            Set<Integer> commentKeySet = sortedComments.keySet();
+            for (Integer commentKey : commentKeySet) {
+                Comment comment = sortedComments.get(commentKey);
+                CommentGUI commentGUI = new CommentGUI(post.getPostID(), comment.getCommentID());
+                add(commentGUI);
+            }
 
             // Add comment button
             JPanel addCommentPanel = new JPanel();
@@ -54,9 +60,9 @@ public class FeedPanel extends JPanel {
             addCommentButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(!PostCreationDialog.isOpen()){
-                        if(!CommentCreationDialog.isOpen()) {
-                            new CommentCreationDialog(postID);
+                    if (!PostCreationDialog.isOpen()) {
+                        if (!CommentCreationDialog.isOpen()) {
+                            new CommentCreationDialog(post.getPostID());
                         }
                     }
                 }
@@ -66,7 +72,7 @@ public class FeedPanel extends JPanel {
         }
 
         // No posts
-        if (postIDArray.length == 0) {
+        if (sortedPosts.size() == 0) {
             System.out.println("No posts to add.");
             add(Box.createRigidArea(new Dimension(0, 10)));
 

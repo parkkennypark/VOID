@@ -5,36 +5,38 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
+ * The main GUI for the app.
+ *
  * @author Kenny Park
  * @version April 20, 2021
  */
 public class MainAppFrame extends JFrame {
 
-    public static JFrame frame;
+    public static MainAppFrame instance;
 
     public static void updateGUI() {
-        frame.setVisible(true);
+        if (instance != null) {
+            instance.makeFrame();
+        }
     }
 
     public MainAppFrame() {
-        frame = this;
-
-        /* set up JFrame */
+        instance = this;
         setTitle("void");
-        setSize(600, 800);
+        setSize(600, 700);
         setMinimumSize(new Dimension(500, 300));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        makeFrame();
+    }
 
+    public void makeFrame() {
         Container content = getContentPane();
+        content.removeAll();
         content.setLayout(new BorderLayout());
-
-//        content.add(mainGui, BorderLayout.CENTER);
 
         /* Top panel (title) */
         JPanel topPanel = new JPanel();
-//        topPanel.setBorder(BorderFactory.createCompoundBorder(Style.BORDER_OUTLINE, padding));
-//        topPanel.setBorder();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
 
         // Empty space
@@ -89,7 +91,7 @@ public class MainAppFrame extends JFrame {
         feedTitlePanel.add(Box.createHorizontalGlue());
 
         // Best muffin label
-        String mostPopularMuffin = LocalDatabase.getMostPopularMuffin();
+        String mostPopularMuffin = Application.getMostPopularMuffin();
         JLabel muffinLabel = new JLabel("most popular muffin: " + mostPopularMuffin);
         muffinLabel.setFont(Style.FONT_SMALL);
         vacuumLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -98,8 +100,10 @@ public class MainAppFrame extends JFrame {
         centerPanel.add(feedTitlePanel);
 
         // Feed scroll pane
-        JScrollPane scrollPane = new JScrollPane(new FeedPanel());
+        FeedPanel feedPanel = FeedPanel.instance == null ? new FeedPanel() : FeedPanel.instance;
+        JScrollPane scrollPane = new JScrollPane(feedPanel);
         scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         centerPanel.add(scrollPane);
 
         /* Bottom panel (profile info) */
@@ -108,7 +112,7 @@ public class MainAppFrame extends JFrame {
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS));
 
         // Account label
-        String identifier = LocalDatabase.getLocalProfile().getIdentifier();
+        String identifier = Application.getLocalProfile().getIdentifier();
         JLabel accountLabel = new JLabel("signed in as: " + identifier);
         accountLabel.setFont(Style.FONT_SMALL);
         bottomPanel.add(accountLabel);
@@ -127,7 +131,7 @@ public class MainAppFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!ProfileEditDialog.isOpen()) {
-                    new ProfileEditDialog(LocalDatabase.getLocalProfile().getProfileID());
+                    new ProfileEditDialog(Application.getLocalProfile().getProfileID());
                 }
             }
         });
@@ -142,9 +146,9 @@ public class MainAppFrame extends JFrame {
         deleteProfileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!ProfileEditDialog.isOpen()) {
-
-                }
+                Packet deleteQuery = new Packet(Packet.PacketType.DELETE_PROFILE_QUERY, Application.getLocalProfile());
+                Client.instance.sendPacketToServer(deleteQuery);
+                Runtime.getRuntime().exit(0);
             }
         });
 

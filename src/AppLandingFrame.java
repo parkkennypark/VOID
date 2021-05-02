@@ -5,7 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
+ * GUI that allows the user to sign up or log in to the app.
+ *
  * @author Kenny Park
+ * @version April 29, 2021
  */
 public class AppLandingFrame extends JFrame {
     Container content;
@@ -180,7 +183,6 @@ public class AppLandingFrame extends JFrame {
                     showErrorMessage("Password cannot be empty.");
                 } else {
                     if (trySignUp(identifier, password, muffinBox.getSelectedIndex())) {
-                        Application.openMainGUI();
                         dispose();
                     } else {
                         showErrorMessage("Identifier is in use.");
@@ -293,22 +295,26 @@ public class AppLandingFrame extends JFrame {
     }
 
     boolean trySignUp(String identifier, String password, int muffinIndex) {
-        if (!LocalDatabase.isIdentifierUnique(identifier)) {
+        if (!Client.database.isIdentifierUnique(identifier)) {
             return false;
         }
 
+        // Setup local profile, but with an ID of -1 since we don't know what it should be.
         Profile profile = new Profile(-1, identifier, password, muffinIndex);
-        Client.instance.sendProfileToServer(profile);
+//        Client.instance.sendProfileToServer(profile);
+        Client.instance.sendPacketToServer(new Packet(Packet.PacketType.PROFILE, profile));
+        Application.setLocalProfile(profile);
 
-        // TODO: this is temporary
-        LocalDatabase.setLocalProfile(profile);
+        // Ask server what my ID should be.
+        Packet IDQuery = new Packet(Packet.PacketType.NEW_PROFILE_ID_QUERY, null);
+        Client.instance.sendPacketToServer(IDQuery);
         return true;
     }
 
     boolean tryLogin(String identifier, String password) {
         try {
-            if (LocalDatabase.isPasswordCorrect(identifier, password)) {
-                LocalDatabase.setLocalProfile(LocalDatabase.getProfileByIdentifier(identifier));
+            if (Client.database.isPasswordCorrect(identifier, password)) {
+                Application.setLocalProfile(Client.database.getProfileByIdentifier(identifier));
                 return true;
             }
         } catch (ProfileNotFoundException e) {

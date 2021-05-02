@@ -18,17 +18,19 @@ public class ProfileEditDialog extends JDialog {
     JComboBox muffinBox;
 
     public ProfileEditDialog(int profileID) {
-        setupFrame(profileID);
-    }
+        instance = this;
 
-    public void setupFrame(int profileID) {
         Profile profile = new Profile();
         try {
-            LocalDatabase.getProfileByID(profileID);
+            profile = Client.database.getProfileByID(profileID);
         } catch (ProfileNotFoundException e) {
             e.printStackTrace();
         }
 
+        setupFrame(profile);
+    }
+
+    public void setupFrame(Profile profile) {
         setSize(300, 260);
         setTitle("edit profile");
         setLocationRelativeTo(null);
@@ -55,7 +57,6 @@ public class ProfileEditDialog extends JDialog {
 
         // Muffin label
         JLabel muffinLabel = new JLabel("favorite type of breakfast muffin");
-        muffinBox.setSelectedIndex(profile.getMuffinIndex());
         muffinLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         muffinLabel.setFont(Style.FONT_SMALL);
         panel.add(muffinLabel);
@@ -64,6 +65,7 @@ public class ProfileEditDialog extends JDialog {
 
         // Muffin dropdown
         muffinBox = new JComboBox(Muffin.getMuffinLabels());
+        muffinBox.setSelectedIndex(profile.getMuffinIndex());
         muffinBox.setAlignmentX(Component.LEFT_ALIGNMENT);
         muffinBox.setFont(Style.FONT_NORMAL);
         panel.add(muffinBox);
@@ -86,6 +88,7 @@ public class ProfileEditDialog extends JDialog {
         saveButton.setFont(Style.FONT_SMALL);
         Style.styleButton(saveButton);
         bottomPanel.add(saveButton);
+        String password = profile.getPassword();
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -97,8 +100,10 @@ public class ProfileEditDialog extends JDialog {
                     showErrorMessage("Identifier is already in use.");
                 } else {
                     // Inputs are valid
-                    Profile newProfile = new Profile(profileID, identifier, profile.getPassword(), muffinIndex);
-                    Client.instance.sendProfileToServer(newProfile);
+                    profile.setIdentifier(identifier);
+                    profile.setMuffinIndex(muffinIndex);
+//                    Client.instance.sendProfileToServer(newProfile);
+                    Client.instance.sendPacketToServer(new Packet(Packet.PacketType.PROFILE, profile));
                     dispose();
                 }
             }

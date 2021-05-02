@@ -3,12 +3,14 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * The GUI for each individual post in the post feed.
  *
  * @author Kenny Park
- * @version 
+ * @version May 2, 2021
  */
 public class PostGUI extends JPanel {
     String sampleBody = "Have you ever had a dream that you, um, you had, your, you- you could, you’ll do, you- you wants, you, you could do so, you- you’ll do, you could- you, you want, you want them to do you so much you could do anything?";
@@ -16,7 +18,7 @@ public class PostGUI extends JPanel {
     public PostGUI(int postID) {
         Post post = new Post();
         try {
-            post = LocalDatabase.getPostByID(postID);
+            post = Client.database.getPostByID(postID);
         } catch (PostNotFoundException postNotFoundException) {
             postNotFoundException.printStackTrace();
         }
@@ -42,10 +44,11 @@ public class PostGUI extends JPanel {
         // Identifier label
         Profile profile = new Profile();
         try {
-            profile = LocalDatabase.getProfileByID(post.getProfileID());
+            profile = Client.database.getProfileByID(post.getProfileID());
         } catch (ProfileNotFoundException e) {
             e.printStackTrace();
         }
+        int profileID = profile.getProfileID();
         String identifier = profile.getIdentifier();
         String muffin = Muffin.values()[profile.getMuffinIndex()].label;
         String timeStamp = post.getTimeStamp();
@@ -53,10 +56,16 @@ public class PostGUI extends JPanel {
         JLabel identifierLabel = new JLabel(identifierStr);
         identifierLabel.setFont(Style.FONT_SMALL);
         titlePanel.add(identifierLabel);
+        identifierLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new UserPostsDialog(profileID);
+            }
+        });
 
         titlePanel.add(Box.createHorizontalGlue());
 
-        boolean isOwner = LocalDatabase.getLocalProfile().getProfileID() == post.getProfileID();
+        boolean isOwner = Application.getLocalProfile().getProfileID() == post.getProfileID();
         if (isOwner) {
             // Edit button
             JButton editButton = new JButton("<html><u>edit</u></html>");
@@ -67,7 +76,7 @@ public class PostGUI extends JPanel {
             editButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(!PostCreationDialog.isOpen()){
+                    if (!PostCreationDialog.isOpen()) {
                         new PostCreationDialog(postID).setAlwaysOnTop(true);
                     }
                 }
@@ -79,10 +88,11 @@ public class PostGUI extends JPanel {
             deleteButton.setMaximumSize(new Dimension(15, 16));
             Style.styleButtonInvisibleBorder(deleteButton);
             titlePanel.add(deleteButton);
+            Post finalPost = post;
             deleteButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // TODO: delete post!
+                    Client.instance.sendPacketToServer(new Packet(Packet.PacketType.DELETE_POST_QUERY, finalPost));
                 }
             });
         }
@@ -99,25 +109,8 @@ public class PostGUI extends JPanel {
         bodyArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(bodyArea);
         scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scrollPane.setWheelScrollingEnabled(false);
         add(scrollPane);
-
-        // Info panel
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.LINE_AXIS));
-        infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Comments button
-        int numComments = 5;
-        JButton commentsButton = new JButton(numComments + " impressions");
-        commentsButton.setFont(Style.FONT_SMALL);
-        Style.styleButton(commentsButton);
-        infoPanel.add(commentsButton);
-
-        infoPanel.add(Box.createHorizontalGlue());
-
-
-//        add(infoPanel);
-
 
         setMaximumSize(new Dimension(getMaximumSize().width, getPreferredSize().height));
         setVisible(true);

@@ -3,17 +3,25 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * The GUI for each individual post in the post feed.
  *
  * @author Kenny Park
- * @version
+ * @version May 2, 2021
  */
 public class CommentGUI extends JPanel {
-    String sampleBody = "Neat";
 
     public CommentGUI(int postID, int commentID) {
+        Comment comment = new Comment(postID);
+        try {
+            comment = Client.database.getCommentByID(postID, commentID);
+        } catch (CommentNotFoundException e) {
+            e.printStackTrace();
+        }
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(new EmptyBorder(0, 15, 0, 0));
 
@@ -23,13 +31,31 @@ public class CommentGUI extends JPanel {
         titlePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Identifier label
-        JLabel identifierLabel = new JLabel("Kenny Park (Bran), 8:15PM | 04/24 ");
+        Profile profile = new Profile();
+        try {
+            profile = Client.database.getProfileByID(comment.getProfileID());
+        } catch (ProfileNotFoundException e) {
+            e.printStackTrace();
+        }
+        int profileID = profile.getProfileID();
+        String identifier = profile.getIdentifier();
+        String muffin = Muffin.values()[profile.getMuffinIndex()].label;
+        String timeStamp = comment.getTimestamp();
+        String identifierStr = identifier + " (" + muffin + "), " + timeStamp;
+        JLabel identifierLabel = new JLabel(identifierStr);
         identifierLabel.setFont(Style.FONT_SMALL);
         identifierLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         titlePanel.add(identifierLabel);
+        identifierLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new UserPostsDialog(profileID);
+            }
+        });
+
         titlePanel.add(Box.createHorizontalGlue());
 
-        boolean isOwner = true;
+        boolean isOwner = Application.getLocalProfile().getProfileID() == comment.getProfileID();
         if (isOwner) {
             // Edit button
             JButton editButton = new JButton("<html><u>edit</u></html>");
@@ -40,8 +66,8 @@ public class CommentGUI extends JPanel {
             editButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(!PostCreationDialog.isOpen()){
-                        if(!CommentCreationDialog.isOpen()) {
+                    if (!PostCreationDialog.isOpen()) {
+                        if (!CommentCreationDialog.isOpen()) {
                             new CommentCreationDialog(postID, commentID);
                         }
                     }
@@ -54,10 +80,11 @@ public class CommentGUI extends JPanel {
             deleteButton.setMaximumSize(new Dimension(20, 16));
             Style.styleButtonInvisibleBorder(deleteButton);
             titlePanel.add(deleteButton);
+            Comment finalComment = comment;
             deleteButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // TODO: delete post!
+                    Client.instance.sendPacketToServer(new Packet(Packet.PacketType.DELETE_COMMENT_QUERY, finalComment));
                 }
             });
         }
@@ -66,25 +93,15 @@ public class CommentGUI extends JPanel {
 
         // Body area
         JTextArea bodyArea = new JTextArea(2, 1);
-        bodyArea.setText(sampleBody);
+        bodyArea.setText(comment.getText());
         bodyArea.setFont(Style.FONT_NORMAL);
         bodyArea.setLineWrap(true);
         bodyArea.setWrapStyleWord(true);
         bodyArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(bodyArea);
         scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scrollPane.setWheelScrollingEnabled(false);
         add(scrollPane);
-
-        // Info panel
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.LINE_AXIS));
-        infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        infoPanel.add(Box.createHorizontalGlue());
-
-
-//        add(infoPanel);
-
 
         setMaximumSize(new Dimension(getMaximumSize().width, getPreferredSize().height));
         setVisible(true);
