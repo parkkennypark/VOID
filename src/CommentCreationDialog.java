@@ -18,26 +18,26 @@ public class CommentCreationDialog extends JDialog {
 
     // Called when making a new comment
     public CommentCreationDialog(int postID) {
-        setupFrame(postID, -1);
+        setupFrame(new Comment(postID));
     }
 
     // Called when editing an existing comment
     public CommentCreationDialog(int postID, int commentID) {
-        Comment comment = null;
+        Comment comment = new Comment(postID);
         try {
-            comment = Database.getCommentByID(postID, commentID);
+            comment = Client.database.getCommentByID(postID, commentID);
         } catch (CommentNotFoundException e) {
             e.printStackTrace();
         }
-        setupFrame(postID, commentID);
+        setupFrame(comment);
         commentButton.setText("save changes");
         commentField.setText(comment.getText());
     }
 
-    private void setupFrame(int postID, int commentID) {
-        Post post = null;
+    private void setupFrame(Comment comment) {
+        Post post = new Post();
         try {
-            post = Database.getPostByID(postID);
+            post = Client.database.getPostByID(comment.getPostIDReplyingTo());
         } catch (PostNotFoundException e) {
             e.printStackTrace();
             return;
@@ -94,8 +94,9 @@ public class CommentCreationDialog extends JDialog {
                 if (text.isEmpty()) {
                     showErrorMessage("Comment cannot be empty.");
                 } else {
-                    Comment comment = new Comment(postID, commentID, text);
-                    Client.instance.sendCommentToServer(comment);
+                    comment.setText(text);
+                    comment.setProfileID(Application.getLocalProfile().getProfileID());
+                    Client.instance.sendPacketToServer(new Packet(Packet.PacketType.COMMENT, comment));
                     dispose();
                 }
             }

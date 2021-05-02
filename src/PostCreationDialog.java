@@ -20,7 +20,7 @@ public class PostCreationDialog extends JDialog {
 
     // New post
     public PostCreationDialog() {
-        setupFrame(-1);
+        setupFrame(new Post());
         setTitle("new post");
     }
 
@@ -28,20 +28,19 @@ public class PostCreationDialog extends JDialog {
     public PostCreationDialog(int postID) {
         Post post = new Post();
         try {
-            post = Database.getPostByID(postID);
+            post = Client.database.getPostByID(postID);
         } catch (PostNotFoundException postNotFoundException) {
             postNotFoundException.printStackTrace();
         }
 
-        setupFrame(postID);
+        setupFrame(post);
         setTitle("edit post");
         postButton.setText("save changes");
         subjectField.setText(post.getSubject());
         bodyArea.setText(post.getBody());
-        Post finalPost = post;
     }
 
-    private void setupFrame(int postID) {
+    private void setupFrame(Post post) {
         instance = this;
         setSize(300, 260);
         setTitle("new post");
@@ -116,7 +115,8 @@ public class PostCreationDialog extends JDialog {
                 } else {
                     int profileID = Application.getLocalProfile().getProfileID();
                     String timestamp = Application.getTimeStamp();
-                    Post post = new Post(postID, profileID, subject, body, timestamp);
+                    post.setSubject(subject);
+                    post.setBody(body);
                     Client.instance.sendPacketToServer(new Packet(Packet.PacketType.POST, post));
 //                    Client.instance.sendPostToServer(post);
                     dispose();

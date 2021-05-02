@@ -11,17 +11,22 @@ import java.util.Scanner;
  */
 public class Comment implements Serializable {
     private int postIDReplyingTo;
+    private int profileID;
     private int commentID;
     private String text;
     private String timestamp;
 
-    public Comment(int postIDReplyingTo, int commentID, String text) {
+    public Comment(int postIDReplyingTo, int profileID, int commentID, String text, String timestamp) {
         this.postIDReplyingTo = postIDReplyingTo;
+        this.profileID = profileID;
         this.commentID = commentID;
         this.text = text;
+        this.timestamp = timestamp;
     }
 
-    public Comment() {
+    public Comment(int postIDReplyingTo) {
+        this.postIDReplyingTo = postIDReplyingTo;
+        commentID = -1;
         text = null;
     }
 
@@ -49,6 +54,10 @@ public class Comment implements Serializable {
         return postIDReplyingTo;
     }
 
+    public int getProfileID() {
+        return profileID;
+    }
+
     public int getCommentID() {
         return commentID;
     }
@@ -65,6 +74,10 @@ public class Comment implements Serializable {
 
     public void setPostIDReplyingTo(int postIDReplyingTo) {
         this.postIDReplyingTo = postIDReplyingTo;
+    }
+
+    public void setProfileID(int profileID) {
+        this.profileID = profileID;
     }
 
     public void setCommentID(int commentID) {

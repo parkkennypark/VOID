@@ -16,7 +16,7 @@ public class PostGUI extends JPanel {
     public PostGUI(int postID) {
         Post post = new Post();
         try {
-            post = Database.getPostByID(postID);
+            post = Client.database.getPostByID(postID);
         } catch (PostNotFoundException postNotFoundException) {
             postNotFoundException.printStackTrace();
         }
@@ -42,7 +42,7 @@ public class PostGUI extends JPanel {
         // Identifier label
         Profile profile = new Profile();
         try {
-            profile = Database.getProfileByID(post.getProfileID());
+            profile = Client.database.getProfileByID(post.getProfileID());
         } catch (ProfileNotFoundException e) {
             e.printStackTrace();
         }
@@ -79,10 +79,11 @@ public class PostGUI extends JPanel {
             deleteButton.setMaximumSize(new Dimension(15, 16));
             Style.styleButtonInvisibleBorder(deleteButton);
             titlePanel.add(deleteButton);
+            Post finalPost = post;
             deleteButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // TODO: delete post!
+                    Client.instance.sendPacketToServer(new Packet(Packet.PacketType.DELETE_POST_QUERY, finalPost));
                 }
             });
         }
@@ -99,6 +100,7 @@ public class PostGUI extends JPanel {
         bodyArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(bodyArea);
         scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scrollPane.setWheelScrollingEnabled(false);
         add(scrollPane);
 
         setMaximumSize(new Dimension(getMaximumSize().width, getPreferredSize().height));

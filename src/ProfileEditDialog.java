@@ -18,17 +18,19 @@ public class ProfileEditDialog extends JDialog {
     JComboBox muffinBox;
 
     public ProfileEditDialog(int profileID) {
-        setupFrame(profileID);
-    }
+        instance = this;
 
-    public void setupFrame(int profileID) {
         Profile profile = new Profile();
         try {
-            profile = Database.getProfileByID(profileID);
+            profile = Client.database.getProfileByID(profileID);
         } catch (ProfileNotFoundException e) {
             e.printStackTrace();
         }
 
+        setupFrame(profile);
+    }
+
+    public void setupFrame(Profile profile) {
         setSize(300, 260);
         setTitle("edit profile");
         setLocationRelativeTo(null);
@@ -98,9 +100,10 @@ public class ProfileEditDialog extends JDialog {
                     showErrorMessage("Identifier is already in use.");
                 } else {
                     // Inputs are valid
-                    Profile newProfile = new Profile(profileID, identifier, password, muffinIndex);
+                    profile.setIdentifier(identifier);
+                    profile.setMuffinIndex(muffinIndex);
 //                    Client.instance.sendProfileToServer(newProfile);
-                    Client.instance.sendPacketToServer(new Packet(Packet.PacketType.PROFILE, newProfile));
+                    Client.instance.sendPacketToServer(new Packet(Packet.PacketType.PROFILE, profile));
                     dispose();
                 }
             }

@@ -1,6 +1,7 @@
 import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Set;
 
 /**
@@ -50,25 +51,35 @@ public class Application {
     public static String getMostPopularMuffin() {
         int[] muffinPoll = new int[Muffin.values().length];
 
-        Set<Integer> profileIDSet = Database.getProfiles().keySet();
+        Set<Integer> profileIDSet = Client.database.getProfiles().keySet();
         for (Integer profileID : profileIDSet) {
-            Profile profile = Database.getProfiles().get(profileID);
+            Profile profile = Client.database.getProfiles().get(profileID);
             muffinPoll[profile.getMuffinIndex()]++;
         }
 
+        String muffinStr = "";
         int mostPopularMuffinIndex = -1;
-        for (int i = 1; i < Muffin.values().length; i++) {
-            if (mostPopularMuffinIndex == -1 && muffinPoll[i] > 0) {
+        int highestTally = 0;
+        for (int i = 0; i < Muffin.values().length; i++) {
+            int currentTally = muffinPoll[i];
+            if (mostPopularMuffinIndex == -1 && currentTally > 0) {
                 mostPopularMuffinIndex = i;
-            } else if (mostPopularMuffinIndex != -1 && muffinPoll[i] > muffinPoll[mostPopularMuffinIndex]) {
+                muffinStr = Muffin.values()[i].label;
+                highestTally = currentTally;
+            } else if (mostPopularMuffinIndex != -1) {
+                if(currentTally > highestTally) {
+                    muffinStr = Muffin.values()[i].label;
+                    highestTally = currentTally;
+                } else if(currentTally == highestTally) {
+                    muffinStr += ", " + Muffin.values()[i].label;
+                }
                 mostPopularMuffinIndex = i;
             }
         }
         if (mostPopularMuffinIndex == -1) {
-            return "insufficient data";
+            return "none?";
         }
-
-        return Muffin.values()[mostPopularMuffinIndex].label;
+        return muffinStr;
     }
 
     public static void setLocalProfile(Profile profile) {

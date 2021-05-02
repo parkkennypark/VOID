@@ -15,8 +15,9 @@ public class Packet implements Serializable {
         PROFILE_HASHTABLE,
         NEW_PROFILE_ID_QUERY,
         NEW_PROFILE_ID_RESPONSE,
-        IS_IDENTIFIER_UNIQUE_QUERY,
-        IS_IDENTIFIER_UNIQUE_RESPONSE
+        DELETE_POST_QUERY,
+        DELETE_PROFILE_QUERY,
+        DELETE_COMMENT_QUERY,
     }
 
     private final PacketType packetType;

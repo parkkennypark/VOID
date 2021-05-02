@@ -292,7 +292,7 @@ public class AppLandingFrame extends JFrame {
     }
 
     boolean trySignUp(String identifier, String password, int muffinIndex) {
-        if (!Database.isIdentifierUnique(identifier)) {
+        if (!Client.database.isIdentifierUnique(identifier)) {
             return false;
         }
 
@@ -310,8 +310,8 @@ public class AppLandingFrame extends JFrame {
 
     boolean tryLogin(String identifier, String password) {
         try {
-            if (Database.isPasswordCorrect(identifier, password)) {
-                Application.setLocalProfile(Database.getProfileByIdentifier(identifier));
+            if (Client.database.isPasswordCorrect(identifier, password)) {
+                Application.setLocalProfile(Client.database.getProfileByIdentifier(identifier));
                 return true;
             }
         } catch (ProfileNotFoundException e) {

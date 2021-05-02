@@ -7,26 +7,35 @@
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Scanner;
+
 public class Post implements Serializable {
     private int postID;
     private int profileID;
     private String subject;
     private String body;
     private String timeStamp;
+    private Hashtable<Integer, Comment> comments = new Hashtable<>();
+    private int highestCommentID;
 
-
-    public Post(int postID, int profileID, String subject, String body, String timeStamp) {
+    public Post(int postID, int profileID, String subject, String body, String timeStamp,
+                Hashtable<Integer, Comment> comments) {
         this.postID = postID;
         this.profileID = profileID;
         this.subject = subject;
         this.body = body;
         this.timeStamp = timeStamp;
+        this.comments = comments;
+        highestCommentID = comments.size();
     }
 
     public Post() {
+        this.postID = -1;
+        this.profileID = Application.getLocalProfile().getProfileID();
         this.subject = null;
         this.body = null;
+        this.timeStamp = Application.getTimeStamp();
     }
 
     public Post(String readFromFile) {
@@ -46,9 +55,15 @@ public class Post implements Serializable {
         }
     }
 
-    public Post(String subject, String body) {
-        this.subject = subject;
-        this.body = body;
+    public void putComment(Comment comment) {
+        int commentKey = comment.getCommentID() == -1 ? ++highestCommentID : comment.getCommentID();
+        comment.setCommentID(commentKey);
+        comments.put(commentKey, comment);
+        System.out.println("Comment ID " + comment + " set in post ID " + postID);
+    }
+
+    public void removeComment(int commentID) {
+        comments.remove(commentID);
     }
 
     public String toString() {
@@ -77,6 +92,10 @@ public class Post implements Serializable {
 
     public String getTimeStamp() {
         return timeStamp;
+    }
+
+    public Hashtable<Integer, Comment> getComments() {
+        return comments;
     }
 
     public void setSubject(String subject) {

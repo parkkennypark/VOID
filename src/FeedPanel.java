@@ -32,17 +32,24 @@ public class FeedPanel extends JPanel {
         removeAll();
 
         // Populate the feed
-        Hashtable<Integer, Post> postHashtable = Database.getPosts();
+        Hashtable<Integer, Post> postHashtable = Client.database.getPosts();
         Set<Integer> postIDSet = postHashtable.keySet();
         System.out.println("Number of posts: " + postIDSet.size());
         for(int postID : postIDSet) {
             PostGUI postGUI = new PostGUI(postID);
             add(postGUI);
-            // TODO: for each comment ...
-//            feedPanel.add(new CommentGUI(postID, 0));
-//        feedPanel.add(new PostGUI(0));
-//        feedPanel.add(new CommentGUI(0, 0));
-//        feedPanel.add(new CommentGUI(0, 0));
+            try {
+                // Add comments
+                Post post = Client.database.getPostByID(postID);
+                Set<Integer> commentIDSet = post.getComments().keySet();
+                for (int commentID : commentIDSet) {
+                    CommentGUI commentGUI = new CommentGUI(postID, commentID);
+                    add(commentGUI);
+                }
+
+            } catch (PostNotFoundException e) {
+                e.printStackTrace();
+            }
 
             // Add comment button
             JPanel addCommentPanel = new JPanel();

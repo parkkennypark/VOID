@@ -11,6 +11,7 @@ import java.util.Hashtable;
  */
 public class Client implements Runnable {
     public static Client instance;
+    public static Database database;
 
     private Socket socket;
     private ObjectInputStream in;
@@ -21,6 +22,7 @@ public class Client implements Runnable {
 
     public Client() {
         instance = this;
+        database = new Database();
         try {
             socket = new Socket("localhost", 4242);
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -52,18 +54,20 @@ public class Client implements Runnable {
                     System.out.println("Received " + packet.getPacketType() + ": " + packet.getObject());
                     switch (packet.getPacketType()) {
                         case POST -> {
-                            Database.putPost((Post) packet.getObject());
+                            database.putPost((Post) packet.getObject());
                             Application.updateGUI();
                         }
                         case PROFILE -> {
-                            Database.putProfile((Profile)packet.getObject());
+                            database.putProfile((Profile)packet.getObject());
                             Application.updateGUI();
                         }
                         case POST_HASHTABLE -> {
-                            Database.setPosts((Hashtable) packet.getObject());
+                            database.setPosts((Hashtable) packet.getObject());
+                            Application.updateGUI();
                         }
                         case PROFILE_HASHTABLE -> {
-                            Database.setProfiles((Hashtable) packet.getObject());
+                            database.setProfiles((Hashtable) packet.getObject());
+                            Application.updateGUI();
                         }
                         case NEW_PROFILE_ID_RESPONSE -> {
                             int ID = (int) packet.getObject();
@@ -80,8 +84,10 @@ public class Client implements Runnable {
 
     public void sendPacketToServer(Packet packet) {
         try {
+            out.reset();
             out.writeObject(packet);
             out.flush();
+            System.out.println("Sent: " + packet.getPacketType() + ": " + packet.getObject());
         } catch (IOException e) {
             e.printStackTrace();
         }

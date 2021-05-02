@@ -20,26 +20,21 @@ public class MainAppFrame extends JFrame {
 
     public MainAppFrame() {
         instance = this;
+        setTitle("void");
+        setSize(600, 700);
+        setMinimumSize(new Dimension(500, 300));
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         makeFrame();
     }
 
     public void makeFrame() {
-        /* set up JFrame */
-        setTitle("void");
-        setSize(600, 800);
-        setMinimumSize(new Dimension(500, 300));
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         Container content = getContentPane();
+        content.removeAll();
         content.setLayout(new BorderLayout());
-
-//        content.add(mainGui, BorderLayout.CENTER);
 
         /* Top panel (title) */
         JPanel topPanel = new JPanel();
-//        topPanel.setBorder(BorderFactory.createCompoundBorder(Style.BORDER_OUTLINE, padding));
-//        topPanel.setBorder();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
 
         // Empty space
@@ -103,8 +98,10 @@ public class MainAppFrame extends JFrame {
         centerPanel.add(feedTitlePanel);
 
         // Feed scroll pane
-        JScrollPane scrollPane = new JScrollPane(new FeedPanel());
+        FeedPanel feedPanel = FeedPanel.instance == null ? new FeedPanel() : FeedPanel.instance;
+        JScrollPane scrollPane = new JScrollPane(feedPanel);
         scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         centerPanel.add(scrollPane);
 
         /* Bottom panel (profile info) */
@@ -147,9 +144,9 @@ public class MainAppFrame extends JFrame {
         deleteProfileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!ProfileEditDialog.isOpen()) {
-
-                }
+                Packet deleteQuery = new Packet(Packet.PacketType.DELETE_PROFILE_QUERY, Application.getLocalProfile());
+                Client.instance.sendPacketToServer(deleteQuery);
+                Runtime.getRuntime().exit(0);
             }
         });
 
