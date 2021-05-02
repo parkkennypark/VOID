@@ -2,7 +2,11 @@ import java.util.Hashtable;
 import java.util.Set;
 
 /**
+ * Contains post and profile data.
+ * The server has a server instance, and a local instance exists per individual client.
+ *
  * @author Kenny Park
+ * @version May 1, 2021
  */
 public class Database {
     private Hashtable<Integer, Post> posts = new Hashtable<>();
@@ -44,7 +48,9 @@ public class Database {
         return posts;
     }
 
-    public Hashtable<Integer, Profile> getProfiles() { return profiles; }
+    public Hashtable<Integer, Profile> getProfiles() {
+        return profiles;
+    }
 
     public void setPosts(Hashtable<Integer, Post> newPosts) {
         posts = newPosts;
@@ -72,9 +78,9 @@ public class Database {
 
     public Profile getProfileByIdentifier(String identifier) throws ProfileNotFoundException {
         Set<Integer> profileIDSet = profiles.keySet();
-        for(Integer profileID : profileIDSet) {
+        for (Integer profileID : profileIDSet) {
             Profile profile = profiles.get(profileID);
-            if(profile.getIdentifier().equals(identifier)) {
+            if (profile.getIdentifier().equals(identifier)) {
                 return profile;
             }
         }
@@ -94,9 +100,9 @@ public class Database {
 
     public boolean isIdentifierUnique(String identifier) {
         Set<Integer> profileIDSet = profiles.keySet();
-        for(Integer profileID : profileIDSet) {
+        for (Integer profileID : profileIDSet) {
             Profile profile = profiles.get(profileID);
-            if(profile.getIdentifier().equals(identifier)) {
+            if (profile.getIdentifier().equals(identifier)) {
                 return false;
             }
         }
@@ -105,9 +111,9 @@ public class Database {
 
     public boolean isPasswordCorrect(String identifier, String password) {
         Set<Integer> profileIDSet = profiles.keySet();
-        for(Integer profileID : profileIDSet) {
+        for (Integer profileID : profileIDSet) {
             Profile profile = profiles.get(profileID);
-            if(profile.getPassword().equals(password)) {
+            if (profile.getPassword().equals(password)) {
                 return true;
             }
         }

@@ -1,15 +1,15 @@
-/**
- * Defines a post.
- *
- * @author Kenny Park
- * @version April 20, 2021
- */
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Scanner;
 
+/**
+ * Defines a post.
+ *
+ * @author Kenny Park
+ * @version April 20, 2021
+ */
 public class Post implements Serializable {
     private int postID;
     private int profileID;
@@ -41,8 +41,8 @@ public class Post implements Serializable {
     public Post(String readFromFile) {
         Scanner scan = new Scanner(readFromFile).useDelimiter(",");
         int i = 0;
-        while(scan.hasNext()) {
-            if(i == 0) {
+        while (scan.hasNext()) {
+            if (i == 0) {
                 this.postID = Integer.parseInt(scan.next());
             } else if (i == 1) {
                 this.profileID = Integer.parseInt(scan.next());

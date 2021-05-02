@@ -6,8 +6,11 @@ import java.util.HashSet;
 import java.util.Hashtable;
 
 /**
- * @author Moosh Khan
- * @version client
+ * A class that connects to the server.
+ * Handles client-side networking.
+ *
+ * @author Moosh Khan, Kenny Park
+ * @version May 1, 2021
  */
 public class Client implements Runnable {
     public static Client instance;
@@ -58,7 +61,7 @@ public class Client implements Runnable {
                             Application.updateGUI();
                         }
                         case PROFILE -> {
-                            database.putProfile((Profile)packet.getObject());
+                            database.putProfile((Profile) packet.getObject());
                             Application.updateGUI();
                         }
                         case POST_HASHTABLE -> {

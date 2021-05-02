@@ -5,10 +5,11 @@ import java.util.Hashtable;
 import java.util.Set;
 
 /**
- *
+ * The main class to be run by the client.
+ * Handles the flow of the program.
  *
  * @author Kenny Park
- * @version 
+ * @version May 1, 2021
  */
 public class Application {
     static float startTimeMS;
@@ -21,7 +22,7 @@ public class Application {
 
         // Wait until connection is established
         float timePassedMS = System.currentTimeMillis() - startTimeMS;
-        while(!Client.instance.isConnected() && timePassedMS < 10000) {
+        while (!Client.instance.isConnected() && timePassedMS < 10000) {
             timePassedMS = System.currentTimeMillis() - startTimeMS;
         }
 
@@ -67,10 +68,10 @@ public class Application {
                 muffinStr = Muffin.values()[i].label;
                 highestTally = currentTally;
             } else if (mostPopularMuffinIndex != -1) {
-                if(currentTally > highestTally) {
+                if (currentTally > highestTally) {
                     muffinStr = Muffin.values()[i].label;
                     highestTally = currentTally;
-                } else if(currentTally == highestTally) {
+                } else if (currentTally == highestTally) {
                     muffinStr += ", " + Muffin.values()[i].label;
                 }
                 mostPopularMuffinIndex = i;

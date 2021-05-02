@@ -5,7 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
+ * GUI that allows the user to sign up or log in to the app.
+ *
  * @author Kenny Park
+ * @version April 29, 2021
  */
 public class AppLandingFrame extends JFrame {
     Container content;

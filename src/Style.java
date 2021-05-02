@@ -8,7 +8,7 @@ import java.io.IOException;
  * Stores style variables for use across all GUI elements.
  *
  * @author Kenny Park
- * @version 
+ * @version April 27, 2021
  */
 public class Style {
     private static final String fontName = "Serif";

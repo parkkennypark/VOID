@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.*;
 
 /**
- * The panel that stores all the feed info.
+ * The panel that displays all posts and comments.
  *
  * @author Kenny Park
  * @version April 27, 2021
@@ -16,7 +16,7 @@ public class FeedPanel extends JPanel {
 
 
     public static void updateGUI() {
-        if(instance != null) {
+        if (instance != null) {
             instance.populateFeed();
         }
     }
@@ -31,7 +31,7 @@ public class FeedPanel extends JPanel {
         removeAll();
 
         // Populate the feed. Treemap for sort.
-        TreeMap<Integer, Post> sortedPosts = new TreeMap<Integer, Post>( Client.database.getPosts() );
+        TreeMap<Integer, Post> sortedPosts = new TreeMap<Integer, Post>(Client.database.getPosts());
         Set<Integer> postKeySet = sortedPosts.descendingKeySet();
         System.out.println("Number of posts: " + sortedPosts.size());
         for (Integer postKey : postKeySet) {
@@ -41,7 +41,7 @@ public class FeedPanel extends JPanel {
 
             TreeMap<Integer, Comment> sortedComments = new TreeMap<Integer, Comment>(post.getComments());
             Set<Integer> commentKeySet = sortedComments.keySet();
-            for(Integer commentKey : commentKeySet) {
+            for (Integer commentKey : commentKeySet) {
                 Comment comment = sortedComments.get(commentKey);
                 CommentGUI commentGUI = new CommentGUI(post.getPostID(), comment.getCommentID());
                 add(commentGUI);
@@ -60,8 +60,8 @@ public class FeedPanel extends JPanel {
             addCommentButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(!PostCreationDialog.isOpen()){
-                        if(!CommentCreationDialog.isOpen()) {
+                    if (!PostCreationDialog.isOpen()) {
+                        if (!CommentCreationDialog.isOpen()) {
                             new CommentCreationDialog(post.getPostID());
                         }
                     }

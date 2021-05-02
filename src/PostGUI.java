@@ -3,12 +3,14 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * The GUI for each individual post in the post feed.
  *
  * @author Kenny Park
- * @version 
+ * @version May 2, 2021
  */
 public class PostGUI extends JPanel {
     String sampleBody = "Have you ever had a dream that you, um, you had, your, you- you could, you’ll do, you- you wants, you, you could do so, you- you’ll do, you could- you, you want, you want them to do you so much you could do anything?";
@@ -46,6 +48,7 @@ public class PostGUI extends JPanel {
         } catch (ProfileNotFoundException e) {
             e.printStackTrace();
         }
+        int profileID = profile.getProfileID();
         String identifier = profile.getIdentifier();
         String muffin = Muffin.values()[profile.getMuffinIndex()].label;
         String timeStamp = post.getTimeStamp();
@@ -53,6 +56,12 @@ public class PostGUI extends JPanel {
         JLabel identifierLabel = new JLabel(identifierStr);
         identifierLabel.setFont(Style.FONT_SMALL);
         titlePanel.add(identifierLabel);
+        identifierLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new UserPostsDialog(profileID);
+            }
+        });
 
         titlePanel.add(Box.createHorizontalGlue());
 
@@ -67,7 +76,7 @@ public class PostGUI extends JPanel {
             editButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(!PostCreationDialog.isOpen()){
+                    if (!PostCreationDialog.isOpen()) {
                         new PostCreationDialog(postID).setAlwaysOnTop(true);
                     }
                 }

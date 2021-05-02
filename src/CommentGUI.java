@@ -3,12 +3,14 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * The GUI for each individual post in the post feed.
  *
  * @author Kenny Park
- * @version
+ * @version May 2, 2021
  */
 public class CommentGUI extends JPanel {
 
@@ -35,6 +37,7 @@ public class CommentGUI extends JPanel {
         } catch (ProfileNotFoundException e) {
             e.printStackTrace();
         }
+        int profileID = profile.getProfileID();
         String identifier = profile.getIdentifier();
         String muffin = Muffin.values()[profile.getMuffinIndex()].label;
         String timeStamp = comment.getTimestamp();
@@ -43,6 +46,13 @@ public class CommentGUI extends JPanel {
         identifierLabel.setFont(Style.FONT_SMALL);
         identifierLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         titlePanel.add(identifierLabel);
+        identifierLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new UserPostsDialog(profileID);
+            }
+        });
+
         titlePanel.add(Box.createHorizontalGlue());
 
         boolean isOwner = Application.getLocalProfile().getProfileID() == comment.getProfileID();
@@ -56,8 +66,8 @@ public class CommentGUI extends JPanel {
             editButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(!PostCreationDialog.isOpen()){
-                        if(!CommentCreationDialog.isOpen()) {
+                    if (!PostCreationDialog.isOpen()) {
+                        if (!CommentCreationDialog.isOpen()) {
                             new CommentCreationDialog(postID, commentID);
                         }
                     }

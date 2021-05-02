@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
+ * The main GUI for the app.
+ *
  * @author Kenny Park
  * @version April 20, 2021
  */
@@ -13,7 +15,7 @@ public class MainAppFrame extends JFrame {
     public static MainAppFrame instance;
 
     public static void updateGUI() {
-        if(instance != null) {
+        if (instance != null) {
             instance.makeFrame();
         }
     }

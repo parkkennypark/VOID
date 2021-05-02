@@ -5,7 +5,7 @@
  * @version April 28, 2021
  */
 public class CommentNotFoundException extends Exception {
-    public CommentNotFoundException () {
+    public CommentNotFoundException() {
         super();
     }
 

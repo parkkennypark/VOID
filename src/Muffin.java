@@ -1,3 +1,10 @@
+/**
+ * An enum containing the possible muffin choices.
+ *
+ * @author Kenny Park
+ * @version April 27, 2021
+ */
+
 public enum Muffin {
     bran("bran"),
     pumpkinSpice("pumpkin-spice"),
@@ -16,7 +23,7 @@ public enum Muffin {
     public static String[] getMuffinLabels() {
         Muffin[] muffins = values();
         String[] muffinLabels = new String[muffins.length];
-        for(int i = 0; i < muffinLabels.length; i++) {
+        for (int i = 0; i < muffinLabels.length; i++) {
             muffinLabels[i] = muffins[i].label;
         }
         return muffinLabels;

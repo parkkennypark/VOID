@@ -4,10 +4,10 @@ import java.util.Date;
 import java.util.Scanner;
 
 /**
+ * A class containing the information for a comment.
  *
- *
- * @author Kenny Park
- * @version
+ * @author Hao Zhou, Kenny Park
+ * @version April 29, 2021
  */
 public class Comment implements Serializable {
     private int postIDReplyingTo;
@@ -33,8 +33,8 @@ public class Comment implements Serializable {
     public Comment(String readFromFile) {
         Scanner scan = new Scanner(readFromFile).useDelimiter(",");
         int i = 0;
-        while(scan.hasNext()) {
-            if(i == 0) {
+        while (scan.hasNext()) {
+            if (i == 0) {
                 this.postIDReplyingTo = Integer.parseInt(scan.next());
             } else if (i == 1) {
                 this.commentID = Integer.parseInt(scan.next());

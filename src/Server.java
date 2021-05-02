@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
- * @author Moosh Khan
- * @version server
+ * A class that accepts multiple clients simultaneously.
+ * Receives and sends information to and from clients.
+ *
+ * @author Moosh Khan, Kenny Park
+ * @version May 1, 2021
  */
 
 public class Server extends Thread {
@@ -55,7 +58,7 @@ public class Server extends Thread {
 
     public static void updateAllClients(RequestHandler except) {
         for (RequestHandler requestHandler : requestHandlers) {
-            if(requestHandler != null && requestHandler != except) {
+            if (requestHandler != null && requestHandler != except) {
 //                requestHandler.sendPacket(packet);
                 requestHandler.sendCurrentData();
             }
@@ -97,19 +100,19 @@ class RequestHandler extends Thread {
             sendCurrentData();
 
 //            String line = reader.readLine();
-            Packet input = (Packet)in.readObject();
+            Packet input = (Packet) in.readObject();
             Packet output;
             while (input != null) {
 //                output = handleIncomingMessage(line);
 
                 output = handleIncomingPacket(input);
-                if(output != null) {
+                if (output != null) {
                     sendPacket(output);
                     Server.updateAllClients(this);
 //                    Server.sendPacketToAllClients(output);
                 }
 
-                input = (Packet)in.readObject();
+                input = (Packet) in.readObject();
 //                line = reader.readLine();
             }
 //            reader.close();

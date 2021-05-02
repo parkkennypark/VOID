@@ -1,10 +1,10 @@
 import java.io.Serializable;
 
 /**
- *
+ * A serializable object that is used to send labeled data between the server and clients.
  *
  * @author Kenny Park
- * @version 
+ * @version April 30, 2021
  */
 public class Packet implements Serializable {
     enum PacketType {

@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- *
+ * GUI that allows for the creation or editing of a comment.
  *
  * @author Kenny Park
  * @version April 28, 2021
