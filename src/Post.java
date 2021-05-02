@@ -7,7 +7,7 @@ import java.util.Scanner;
 /**
  * Defines a post.
  *
- * @author Kenny Park
+ * @author Hao Zhou, Kenny Park
  * @version April 20, 2021
  */
 public class Post implements Serializable {
