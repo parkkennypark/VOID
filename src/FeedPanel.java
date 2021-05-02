@@ -3,8 +3,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Hashtable;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The panel that stores all the feed info.
@@ -31,24 +30,21 @@ public class FeedPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         removeAll();
 
-        // Populate the feed
-        Hashtable<Integer, Post> postHashtable = Client.database.getPosts();
-        Set<Integer> postIDSet = postHashtable.keySet();
-        System.out.println("Number of posts: " + postIDSet.size());
-        for(int postID : postIDSet) {
-            PostGUI postGUI = new PostGUI(postID);
+        // Populate the feed. Treemap for sort.
+        TreeMap<Integer, Post> sortedPosts = new TreeMap<Integer, Post>( Client.database.getPosts() );
+        Set<Integer> postKeySet = sortedPosts.descendingKeySet();
+        System.out.println("Number of posts: " + sortedPosts.size());
+        for (Integer postKey : postKeySet) {
+            Post post = sortedPosts.get(postKey);
+            PostGUI postGUI = new PostGUI(post.getPostID());
             add(postGUI);
-            try {
-                // Add comments
-                Post post = Client.database.getPostByID(postID);
-                Set<Integer> commentIDSet = post.getComments().keySet();
-                for (int commentID : commentIDSet) {
-                    CommentGUI commentGUI = new CommentGUI(postID, commentID);
-                    add(commentGUI);
-                }
 
-            } catch (PostNotFoundException e) {
-                e.printStackTrace();
+            TreeMap<Integer, Comment> sortedComments = new TreeMap<Integer, Comment>(post.getComments());
+            Set<Integer> commentKeySet = sortedComments.keySet();
+            for(Integer commentKey : commentKeySet) {
+                Comment comment = sortedComments.get(commentKey);
+                CommentGUI commentGUI = new CommentGUI(post.getPostID(), comment.getCommentID());
+                add(commentGUI);
             }
 
             // Add comment button
@@ -66,7 +62,7 @@ public class FeedPanel extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     if(!PostCreationDialog.isOpen()){
                         if(!CommentCreationDialog.isOpen()) {
-                            new CommentCreationDialog(postID);
+                            new CommentCreationDialog(post.getPostID());
                         }
                     }
                 }
@@ -76,7 +72,7 @@ public class FeedPanel extends JPanel {
         }
 
         // No posts
-        if (postIDSet.size() == 0) {
+        if (sortedPosts.size() == 0) {
             System.out.println("No posts to add.");
             add(Box.createRigidArea(new Dimension(0, 10)));
 

@@ -98,6 +98,10 @@ public class Post implements Serializable {
         return comments;
     }
 
+    public int getHighestCommentID() {
+        return highestCommentID;
+    }
+
     public void setSubject(String subject) {
         this.subject = subject;
     }

@@ -32,6 +32,10 @@ public class Database {
         profiles.remove(profileID);
     }
 
+    public int getHighestPostID() {
+        return highestPostID;
+    }
+
     public int getHighestProfileID() {
         return highestProfileID;
     }
