@@ -104,6 +104,7 @@ public class ProfileEditDialog extends JDialog {
                     profile.setMuffinIndex(muffinIndex);
 //                    Client.instance.sendProfileToServer(newProfile);
                     Client.instance.sendPacketToServer(new Packet(Packet.PacketType.PROFILE, profile));
+                    Application.setLocalProfile(profile);
                     dispose();
                 }
             }
