@@ -2,6 +2,7 @@ import javax.xml.crypto.Data;
 import java.awt.image.DataBuffer;
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashSet;
 import java.util.Hashtable;
 
@@ -79,6 +80,9 @@ public class Client implements Runnable {
                         }
                     }
                 }
+            } catch (SocketException e) {
+                System.out.println("Lost connection - exiting.");
+                Runtime.getRuntime().exit(0);
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
