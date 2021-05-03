@@ -7,6 +7,12 @@ import java.io.Serializable;
  * @version April 30, 2021
  */
 public class Packet implements Serializable {
+    /**
+     * An enum that describes the type of packet.
+     *
+     * @author Kenny Park
+     * @version April 30, 2021
+     */
     enum PacketType {
         POST,
         PROFILE,

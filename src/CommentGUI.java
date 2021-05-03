@@ -84,7 +84,8 @@ public class CommentGUI extends JPanel {
             deleteButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Client.instance.sendPacketToServer(new Packet(Packet.PacketType.DELETE_COMMENT_QUERY, finalComment));
+                    Packet packet = new Packet(Packet.PacketType.DELETE_COMMENT_QUERY, finalComment);
+                    Client.instance.sendPacketToServer(packet);
                 }
             });
         }

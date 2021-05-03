@@ -21,7 +21,8 @@ public class Profile implements Serializable {
 
     public Profile(String input) {
         this.identifier = input.substring(input.indexOf('=') + 1, input.indexOf(", muffinIndex="));
-        this.muffinIndex = Integer.parseInt(input.substring(input.indexOf(", muffinIndex=") + 14, input.indexOf(", profileID=")));
+        this.muffinIndex = Integer.parseInt(input.substring(input.indexOf(", muffinIndex=") + 14,
+                input.indexOf(", profileID=")));
         this.profileID = Integer.parseInt(input.substring(input.indexOf(", profileID=") + 12, input.length() - 1));
     }
 

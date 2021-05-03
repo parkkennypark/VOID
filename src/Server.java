@@ -126,6 +126,13 @@ public class Server extends Thread {
     }
 }
 
+/**
+ * A class that is made per connected client.
+ * Receives and sends information to and from clients.
+ *
+ * @author Moosh Khan, Kenny Park
+ * @version May 1, 2021
+ */
 class RequestHandler extends Thread {
     private Socket socket;
     private ObjectOutputStream out;

@@ -13,8 +13,6 @@ import java.awt.event.MouseEvent;
  * @version May 2, 2021
  */
 public class PostGUI extends JPanel {
-    String sampleBody = "Have you ever had a dream that you, um, you had, your, you- you could, you’ll do, you- you wants, you, you could do so, you- you’ll do, you could- you, you want, you want them to do you so much you could do anything?";
-
     public PostGUI(int postID) {
         Post post = new Post();
         try {

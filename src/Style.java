@@ -11,11 +11,11 @@ import java.io.IOException;
  * @version April 27, 2021
  */
 public class Style {
-    private static final String fontName = "Serif";
-    static final Font FONT_TITLE = new Font(fontName, Font.PLAIN, 28);
-    static final Font FONT_HEADER = new Font(fontName, Font.BOLD, 16);
-    static final Font FONT_NORMAL = new Font(fontName, Font.PLAIN, 16);
-    static final Font FONT_SMALL = new Font(fontName, Font.PLAIN, 12);
+    private static final String FONT_NAME = "Serif";
+    static final Font FONT_TITLE = new Font(FONT_NAME, Font.PLAIN, 28);
+    static final Font FONT_HEADER = new Font(FONT_NAME, Font.BOLD, 16);
+    static final Font FONT_NORMAL = new Font(FONT_NAME, Font.PLAIN, 16);
+    static final Font FONT_SMALL = new Font(FONT_NAME, Font.PLAIN, 12);
 
     static final Border BORDER_OUTLINE = BorderFactory.createLineBorder(Color.BLACK, 1, true);
     static final Border PADDING_SUBMENU = BorderFactory.createEmptyBorder(5, 5, 5, 5);

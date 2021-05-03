@@ -44,9 +44,9 @@ public class Application {
         return dateFormat.format(date);
     }
 
-    public static void setLocalProfileID(int ID) {
-        System.out.println("Local profile ID set to " + ID);
-        localProfile.setProfileID(ID);
+    public static void setLocalProfileID(int profileID) {
+        System.out.println("Local profile ID set to " + profileID);
+        localProfile.setProfileID(profileID);
     }
 
     public static String getMostPopularMuffin() {

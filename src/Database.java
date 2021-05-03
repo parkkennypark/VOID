@@ -40,16 +40,16 @@ public class Database implements Serializable {
         Set<Integer> postKeySet = sortedPosts.keySet();
         for (Integer postKey : postKeySet) {
             Post post = sortedPosts.get(postKey);
-            if(post.getProfileID() == profileID) {
+            if (post.getProfileID() == profileID) {
                 deletePost(postKey);
             }
 
             // Delete all comments from user
             TreeMap<Integer, Comment> sortedComments = new TreeMap<>(post.getComments());
             Set<Integer> commentKeySet = sortedComments.keySet();
-            for(Integer commentKey : commentKeySet) {
+            for (Integer commentKey : commentKeySet) {
                 Comment comment = sortedComments.get(commentKey);
-                if(comment.getProfileID() == profileID) {
+                if (comment.getProfileID() == profileID) {
                     post.removeComment(comment.getCommentID());
                 }
             }

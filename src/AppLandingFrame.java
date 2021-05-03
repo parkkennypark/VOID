@@ -306,8 +306,8 @@ public class AppLandingFrame extends JFrame {
         Application.setLocalProfile(profile);
 
         // Ask server what my ID should be.
-        Packet IDQuery = new Packet(Packet.PacketType.NEW_PROFILE_ID_QUERY, null);
-        Client.instance.sendPacketToServer(IDQuery);
+        Packet idQuery = new Packet(Packet.PacketType.NEW_PROFILE_ID_QUERY, null);
+        Client.instance.sendPacketToServer(idQuery);
         return true;
     }
 
