@@ -42,7 +42,8 @@ public class Client implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
             connected = false;
-            System.out.println("Failed to connect");
+            System.out.println("Failed to connect - exiting");
+            Runtime.getRuntime().exit(0);
         }
     }
 
