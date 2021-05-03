@@ -1,5 +1,3 @@
-import java.io.Serial;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -11,23 +9,15 @@ import java.util.Scanner;
  * @author Hao Zhou, Kenny Park
  * @version May 1, 2021
  */
-public class Comment implements Serializable {
+public class Comment {
     private int postIDReplyingTo;   //the postID that's being replied
-    private int profileID;
     private int commentID;  //the commentID
     private String text;    //the comment text
     private String timestamp;   //time
 
-    public Comment(int postID) {
-        this.postIDReplyingTo = postID;
-        this.commentID = -1;
-        this.timestamp = Application.getTimeStamp();
-    }
-
-    public Comment(int postIDReplyingTo, int commentID, int profileID, String text) {
+    public Comment(int postIDReplyingTo, int commentID, String text) {
         this.postIDReplyingTo = postIDReplyingTo;
         this.commentID = commentID;
-        this.profileID = profileID;
         this.text = text;
     }
 
@@ -83,10 +73,6 @@ public class Comment implements Serializable {
         return commentID;
     }
 
-    public int getProfileID() {
-        return profileID;
-    }
-
     /**
      * return the text
      *
@@ -96,8 +82,15 @@ public class Comment implements Serializable {
         return text;
     }
 
+    /**
+     * return the timestamp
+     *
+     * @return String the time when this method is called
+     */
     public String getTimestamp() {
-        return timestamp;
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return dateFormat.format(date);
     }
 
     /**
@@ -107,10 +100,6 @@ public class Comment implements Serializable {
      */
     public void setPostIDReplyingTo(int postIDReplyingTo) {
         this.postIDReplyingTo = postIDReplyingTo;
-    }
-
-    public void setProfileID(int profileID) {
-        this.profileID = profileID;
     }
 
     /**

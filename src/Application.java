@@ -16,7 +16,15 @@ public class Application {
     private static Profile localProfile;
 
     public static void main(String[] args) {
+        startTimeMS = System.currentTimeMillis();
+
         Client client = new Client();
+
+        // Wait until connection is established
+        float timePassedMS = System.currentTimeMillis() - startTimeMS;
+        while (!Client.instance.isConnected() && timePassedMS < 10000) {
+            timePassedMS = System.currentTimeMillis() - startTimeMS;
+        }
 
         new AppLandingFrame();
     }
@@ -34,6 +42,11 @@ public class Application {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm");
         return dateFormat.format(date);
+    }
+
+    public static void setLocalProfileID(int ID) {
+        System.out.println("Local profile ID set to " + ID);
+        localProfile.setProfileID(ID);
     }
 
     public static String getMostPopularMuffin() {
@@ -68,11 +81,6 @@ public class Application {
             return "none?";
         }
         return muffinStr;
-    }
-
-    public static void setLocalProfileID(int ID) {
-        System.out.println("Local profile ID set to " + ID);
-        localProfile.setProfileID(ID);
     }
 
     public static void setLocalProfile(Profile profile) {
