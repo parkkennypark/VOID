@@ -3,6 +3,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -70,7 +71,8 @@ public class Server extends Thread {
         int port = 4242;
         System.out.println("Start server on port: " + port);
 
-        database = new Database();
+//        database = new Database();
+        loadDatabase();
 
         Server server = new Server(port);
 
@@ -80,6 +82,47 @@ public class Server extends Thread {
         server.startServer();
 
         server.stopServer();
+    }
+
+    private static void loadDatabase() {
+        try {
+            FileInputStream fi = new FileInputStream("database.txt");
+            ObjectInputStream oi = new ObjectInputStream(fi);
+
+            database = (Database) oi.readObject();
+            System.out.println("Database file loaded.");
+
+            oi.close();
+            fi.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Database file not initialized, initializing:");
+            database = new Database();
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveDatabase() {
+        try {
+            FileOutputStream f = new FileOutputStream("database.txt");
+            ObjectOutputStream o = new ObjectOutputStream(f);
+
+            // Write objects to file
+            o.writeObject(database);
+            System.out.println("Database saved.");
+
+            o.close();
+            f.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+            e.printStackTrace();
+        }
     }
 }
 
@@ -115,6 +158,7 @@ class RequestHandler extends Thread {
                     sendPacket(output);
                     Server.updateAllClients(this);
 //                    Server.sendPacketToAllClients(output);
+                    Server.saveDatabase();
                 }
 
                 input = (Packet) in.readObject();
@@ -125,6 +169,9 @@ class RequestHandler extends Thread {
             socket.close();
 
             System.out.println("Connection closed");
+        } catch (SocketException e) {
+            System.out.println("Client lost connection.");
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

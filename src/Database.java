@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Set;
 
@@ -8,7 +9,7 @@ import java.util.Set;
  * @author Kenny Park
  * @version May 1, 2021
  */
-public class Database {
+public class Database implements Serializable {
     private Hashtable<Integer, Post> posts = new Hashtable<>();
     private Hashtable<Integer, Profile> profiles = new Hashtable<>();
     private int highestPostID = 0;
