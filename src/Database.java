@@ -1,6 +1,7 @@
 import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Contains post and profile data.
@@ -34,6 +35,25 @@ public class Database implements Serializable {
     }
 
     public void deleteProfile(int profileID) {
+        // Delete all posts from user
+        TreeMap<Integer, Post> sortedPosts = new TreeMap<>(posts);
+        Set<Integer> postKeySet = sortedPosts.keySet();
+        for (Integer postKey : postKeySet) {
+            Post post = sortedPosts.get(postKey);
+            if(post.getProfileID() == profileID) {
+                deletePost(postKey);
+            }
+
+            // Delete all comments from user
+            TreeMap<Integer, Comment> sortedComments = new TreeMap<>(post.getComments());
+            Set<Integer> commentKeySet = sortedComments.keySet();
+            for(Integer commentKey : commentKeySet) {
+                Comment comment = sortedComments.get(commentKey);
+                if(comment.getProfileID() == profileID) {
+                    post.removeComment(comment.getCommentID());
+                }
+            }
+        }
         profiles.remove(profileID);
     }
 
