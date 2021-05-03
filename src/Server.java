@@ -15,6 +15,7 @@ import java.util.Hashtable;
  */
 
 public class Server extends Thread {
+    public static Server instance;
     private ServerSocket serverSocket;
     private int port;
     private boolean running = false;
@@ -72,6 +73,10 @@ public class Server extends Thread {
         database = new Database();
 
         Server server = new Server(port);
+
+        instance = server;
+        new ServerGUI();
+
         server.startServer();
 
         server.stopServer();
